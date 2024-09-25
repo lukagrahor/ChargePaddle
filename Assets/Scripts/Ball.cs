@@ -4,6 +4,8 @@ public class Ball : MonoBehaviour
 {
     [SerializeField, Min(0f)]
     float
+    maxXSpeed = 20f,
+    startXSpeed = 8f,
     constantXSpeed = 8f,
     constantYSpeed = 10f,
     halfSize = 0.5f;
@@ -44,6 +46,13 @@ public class Ball : MonoBehaviour
         velocity.y = -velocity.y;
     }
 
+    public void SetXPositionAndSpeed(float start, float speedFactor, float deltaTime)
+    {
+        velocity.x = maxXSpeed * speedFactor;
+        position.x = start + velocity.x * deltaTime;
+    }
+
     public float BallHalfSize => halfSize;
     public Vector2 Position => position;
+    public Vector2 Velocity => velocity;
 }

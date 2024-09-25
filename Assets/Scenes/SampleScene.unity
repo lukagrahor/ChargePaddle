@@ -477,6 +477,7 @@ MonoBehaviour:
   ball: {fileID: 7802480484361116093}
   paddleTop: {fileID: 5656369848310302825}
   paddleBottom: {fileID: 1046290702}
+  arenaSize: {x: 10, y: 10}
 --- !u!4 &415209164
 Transform:
   m_ObjectHideFlags: 0
@@ -1111,6 +1112,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7426983376661575731, guid: e410ebf8b6a403a488db651fb1f48329,
+        type: 3}
+      propertyPath: isAI
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

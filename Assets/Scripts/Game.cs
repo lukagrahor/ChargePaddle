@@ -14,20 +14,22 @@ public class Game : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        paddleBottom.Move(ball.Position.x, arenaSize.x);
+        paddleTop.Move(ball.Position.x, arenaSize.x);
         ball.Move();
-        BounceXIfNeeded();
+        BounceXIfNeeded(ball.Position.x);
         BounceYIfNeeded();
         ball.UpdateVisualization();
     }
 
-    void BounceXIfNeeded()
+    void BounceXIfNeeded(float x)
     {
         float xSize = arenaSize.x - ball.BallHalfSize;
-        if (ball.Position.x < -xSize)
+        if (x < -xSize)
         {
             ball.BounceX(-xSize);
         }
-        else if (ball.Position.x > xSize)
+        else if (x > xSize)
         {
             ball.BounceX(xSize);
         }
@@ -38,11 +40,24 @@ public class Game : MonoBehaviour
         float ySize = arenaSize.y - ball.BallHalfSize;
         if (ball.Position.y < -ySize)
         {
-            ball.BounceY(-ySize);
+            BounceY(-ySize, paddleBottom);
         }
         else if (ball.Position.y > ySize)
         {
-            ball.BounceY(ySize);
+            BounceY(ySize, paddleTop);
+        }
+    }
+
+    void BounceY(float boundary, Paddle defender)
+    {
+        float durationAfterBounce = (ball.Position.y - boundary) / ball.Velocity.y;
+        float bounceX = ball.Position.x - ball.Velocity.x * durationAfterBounce;
+        BounceXIfNeeded(bounceX);
+        bounceX = ball.Position.x - ball.Velocity.x * durationAfterBounce;
+        ball.BounceY(boundary);
+        if(defender.HitBall(bounceX, ball.BallHalfSize, out float hitFactor))
+        {
+            ball.SetXPositionAndSpeed(bounceX, hitFactor, durationAfterBounce);
         }
     }
 }
