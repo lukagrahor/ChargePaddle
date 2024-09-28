@@ -9,6 +9,8 @@ public class Paddle : MonoBehaviour
         speed = 10f;
     [SerializeField]
     bool isAI;
+    [SerializeField]
+    TextMeshPro scoreText;
 
     // Start is called before the first frame update
     void Start()

@@ -6,7 +6,6 @@ public class Ball : MonoBehaviour
     float
     maxXSpeed = 20f,
     startXSpeed = 8f,
-    constantXSpeed = 8f,
     constantYSpeed = 10f,
     halfSize = 0.5f;
 
@@ -27,7 +26,7 @@ public class Ball : MonoBehaviour
     {
         position = Vector2.zero;
         UpdateVisualization();
-        velocity = new Vector2(constantXSpeed, -constantYSpeed);
+        velocity = new Vector2(startXSpeed, -constantYSpeed);
     }
 
     public void UpdateVisualization() => transform.localPosition = new Vector3(position.x, 0, position.y);

@@ -52,8 +52,10 @@ public class Game : MonoBehaviour
     {
         float durationAfterBounce = (ball.Position.y - boundary) / ball.Velocity.y;
         float bounceX = ball.Position.x - ball.Velocity.x * durationAfterBounce;
+
         BounceXIfNeeded(bounceX);
         bounceX = ball.Position.x - ball.Velocity.x * durationAfterBounce;
+
         ball.BounceY(boundary);
         if(defender.HitBall(bounceX, ball.BallHalfSize, out float hitFactor))
         {
