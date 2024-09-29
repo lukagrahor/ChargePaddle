@@ -10,11 +10,17 @@ public class Paddle : MonoBehaviour
         speed = 10f,
         maxTargetingBias = 0.75f;
     [SerializeField]
-    bool isAI;
-    [SerializeField]
     TextMeshPro scoreText;
     int score;
     float size, targetingBias;
+
+    enum Players
+    {
+        Player1, Player2, AI
+    }
+
+    [SerializeField]
+    Players player;
 
     void Awake()
     {
@@ -24,7 +30,7 @@ public class Paddle : MonoBehaviour
     public void Move(float target, float arenaSize)
     {
         Vector3 p = transform.localPosition;
-        p.x = isAI ? AdjustByAI(p.x, target) : AdjustByPlayer(p.x);
+        p.x = player == Players.AI ? AdjustByAI(p.x, target) : AdjustByPlayers(p.x);
         float limit = arenaSize - 0.5f - size;
         p.x = Mathf.Clamp(p.x, -limit, limit);
         transform.localPosition = p;
@@ -39,17 +45,18 @@ public class Paddle : MonoBehaviour
         }
         return Mathf.Max(x - speed * Time.deltaTime, target);
     }
-
-    float AdjustByPlayer(float x)
+    
+    float AdjustByPlayers(float x)
     {
-        bool goRight = Input.GetKey(KeyCode.RightArrow);
-        bool goLeft = Input.GetKey(KeyCode.LeftArrow);
+        bool goRight = player == Players.Player1 ? Input.GetKey(KeyCode.RightArrow) : Input.GetKey(KeyCode.D);
+        bool goLeft = player == Players.Player1 ? Input.GetKey(KeyCode.LeftArrow) : Input.GetKey(KeyCode.A);
+
         if (goRight && !goLeft)
         {
             return x + speed * Time.deltaTime;
         }
         else if (goLeft && !goRight)
-         {
+        {
             return x - speed * Time.deltaTime;
         }
         return x;
