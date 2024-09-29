@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class Game : MonoBehaviour
@@ -5,17 +6,33 @@ public class Game : MonoBehaviour
     [SerializeField] Ball ball;
     [SerializeField] Paddle paddleTop, paddleBottom;
     [SerializeField, Min(0f)] Vector2 arenaSize = new Vector2(10f, 10f);
-    // Start is called before the first frame update
-    void Start()
-    {
-        ball.StartNewGame();
-    }
+    [SerializeField, Min(2)] int pointsToWin = 3;
 
-    // Update is called once per frame
+    [SerializeField]
+    TextMeshPro countdownText;
+
+    [SerializeField, Min(1f)]
+    float newGameDelay = 3f;
+
+    float countdownUntilNewGame;
+
     void Update()
     {
         paddleBottom.Move(ball.Position.x, arenaSize.x);
         paddleTop.Move(ball.Position.x, arenaSize.x);
+        if (countdownUntilNewGame <= 0f)
+        {
+            countdownText.gameObject.SetActive(false);
+            updateGame();
+        }
+        else
+        {
+            UpdateCountdown();
+        }
+    }
+
+    void updateGame()
+    {
         ball.Move();
         BounceXIfNeeded(ball.Position.x);
         BounceYIfNeeded();
@@ -40,15 +57,15 @@ public class Game : MonoBehaviour
         float ySize = arenaSize.y - ball.BallHalfSize;
         if (ball.Position.y < -ySize)
         {
-            BounceY(-ySize, paddleBottom);
+            BounceY(-ySize, paddleBottom, paddleTop);
         }
         else if (ball.Position.y > ySize)
         {
-            BounceY(ySize, paddleTop);
+            BounceY(ySize, paddleTop, paddleBottom);
         }
     }
 
-    void BounceY(float boundary, Paddle defender)
+    void BounceY(float boundary, Paddle defender, Paddle attacker)
     {
         float durationAfterBounce = (ball.Position.y - boundary) / ball.Velocity.y;
         float bounceX = ball.Position.x - ball.Velocity.x * durationAfterBounce;
@@ -60,6 +77,45 @@ public class Game : MonoBehaviour
         if(defender.HitBall(bounceX, ball.BallHalfSize, out float hitFactor))
         {
             ball.SetXPositionAndSpeed(bounceX, hitFactor, durationAfterBounce);
+        }
+        else if (attacker.ScorePoint(pointsToWin))
+        {
+            EndGame();
+        }
+    }
+
+    void Awake() => countdownUntilNewGame = newGameDelay;
+
+    void StartNewGame()
+    {
+        ball.StartNewGame();
+        paddleBottom.StartNewGame();
+        paddleTop.StartNewGame();
+    }
+
+    void EndGame()
+    {
+        countdownUntilNewGame = newGameDelay;
+        countdownText.SetText("KONEC IGRE");
+        countdownText.gameObject.SetActive(true);
+        ball.EndGame();
+    }
+
+    void UpdateCountdown()
+    {
+        countdownUntilNewGame -= Time.deltaTime;
+        if (countdownUntilNewGame <= 0f)
+        {
+            countdownText.gameObject.SetActive(false);
+            StartNewGame();
+        }
+        else
+        {
+            float displayValue = Mathf.Ceil(countdownUntilNewGame);
+            if (displayValue < newGameDelay)
+            {
+                countdownText.SetText("{0}", displayValue);
+            }
         }
     }
 }

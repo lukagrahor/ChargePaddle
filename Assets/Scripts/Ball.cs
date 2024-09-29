@@ -5,28 +5,27 @@ public class Ball : MonoBehaviour
     [SerializeField, Min(0f)]
     float
     maxXSpeed = 20f,
-    startXSpeed = 8f,
+    maxStartXSpeed = 2f,
     constantYSpeed = 10f,
     halfSize = 0.5f;
 
     Vector2 position, velocity;
-    // Start is called before the first frame update
-    void Start()
-    {
-        StartNewGame();
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    void Awake() => gameObject.SetActive(false);
 
     public void StartNewGame()
     {
         position = Vector2.zero;
         UpdateVisualization();
-        velocity = new Vector2(startXSpeed, -constantYSpeed);
+        velocity.x = Random.Range(-maxStartXSpeed, maxStartXSpeed);
+        velocity.y = -constantYSpeed;
+        gameObject.SetActive(true);
+    }
+
+    public void EndGame()
+    {
+        position.x = 0f;
+        gameObject.SetActive(false);
     }
 
     public void UpdateVisualization() => transform.localPosition = new Vector3(position.x, 0, position.y);

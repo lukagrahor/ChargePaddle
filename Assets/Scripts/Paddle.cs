@@ -5,24 +5,22 @@ public class Paddle : MonoBehaviour
 {
     [SerializeField, Min(0f)]
     float
-        size = 4f,
-        speed = 10f;
+        minSize = 2f,
+        maxSize = 4f,
+        speed = 10f,
+        maxTargetingBias = 0.75f;
     [SerializeField]
     bool isAI;
     [SerializeField]
     TextMeshPro scoreText;
+    int score;
+    float size, targetingBias;
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        
+        SetScore(0);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     public void Move(float target, float arenaSize)
     {
         Vector3 p = transform.localPosition;
@@ -32,17 +30,9 @@ public class Paddle : MonoBehaviour
         transform.localPosition = p;
     }
 
-    float AjdustByAI (float x, float target)
-    {
-        if (x < target)
-        {
-            return Mathf.Min(x + speed * Time.deltaTime, target);
-        }
-        return Mathf.Max(x - speed * Time.deltaTime, target);
-    }
-
     float AdjustByAI(float x, float target)
     {
+        target += targetingBias * size;
         if (x < target)
         {
             return Mathf.Min(x + speed * Time.deltaTime, target);
@@ -67,8 +57,40 @@ public class Paddle : MonoBehaviour
 
     public bool HitBall(float ballX, float ballSize, out float hitFactor)
     {
+        ChangeTargetingBias();
         hitFactor = (ballX - transform.localPosition.x) /
             (size + ballSize); 
         return -1f <= hitFactor && hitFactor <= 1f;
+    }
+
+    void SetScore(int newScore, float pointsToWin = 10f)
+    {
+        score = newScore;
+        scoreText.SetText("{0}", newScore);
+
+        SetSize(Mathf.Lerp(maxSize, minSize, newScore / (pointsToWin - 1f)));
+    }
+
+    public void StartNewGame()
+    {
+        SetScore(0);
+        ChangeTargetingBias();
+    }
+
+    public bool ScorePoint(int pointsToWin)
+    {
+        SetScore(score + 1, pointsToWin);
+        return score >= pointsToWin;
+    }
+
+    void ChangeTargetingBias() =>
+        targetingBias = Random.Range(-maxTargetingBias, maxTargetingBias);
+
+    void SetSize(float newSize)
+    {
+        size = newSize;
+        Vector3 s = transform.localScale;
+        s.x = 2f * newSize;
+        transform.localScale = s;
     }
 }
