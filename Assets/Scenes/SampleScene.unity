@@ -491,6 +491,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682bdd855336a2b4bbf1989fb8b9584f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jostleStrength: 40
+  pushStrength: 1
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -645,6 +647,7 @@ MonoBehaviour:
   pointsToWin: 3
   countdownText: {fileID: 1616114684}
   newGameDelay: 3
+  livelyCamera: {fileID: 330585548}
 --- !u!4 &415209164
 Transform:
   m_ObjectHideFlags: 0

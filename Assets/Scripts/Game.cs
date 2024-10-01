@@ -15,6 +15,8 @@ public class Game : MonoBehaviour
     float newGameDelay = 3f;
 
     float countdownUntilNewGame;
+    [SerializeField]
+    LivelyCamera livelyCamera;
 
     void Update()
     {
@@ -44,10 +46,12 @@ public class Game : MonoBehaviour
         float xSize = arenaSize.x - ball.BallHalfSize;
         if (x < -xSize)
         {
+            livelyCamera.PushXZ(ball.Velocity);
             ball.BounceX(-xSize);
         }
         else if (x > xSize)
         {
+            livelyCamera.PushXZ(ball.Velocity);
             ball.BounceX(xSize);
         }
     }
@@ -72,15 +76,19 @@ public class Game : MonoBehaviour
 
         BounceXIfNeeded(bounceX);
         bounceX = ball.Position.x - ball.Velocity.x * durationAfterBounce;
-
+        livelyCamera.PushXZ(ball.Velocity);
         ball.BounceY(boundary);
         if(defender.HitBall(bounceX, ball.BallHalfSize, out float hitFactor))
         {
             ball.SetXPositionAndSpeed(bounceX, hitFactor, durationAfterBounce);
         }
-        else if (attacker.ScorePoint(pointsToWin))
+        else
         {
-            EndGame();
+            livelyCamera.JostleY();
+            if (attacker.ScorePoint(pointsToWin))
+            {
+                EndGame();
+            }
         }
     }
 
