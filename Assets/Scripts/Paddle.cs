@@ -9,10 +9,23 @@ public class Paddle : MonoBehaviour
         maxSize = 4f,
         speed = 10f,
         maxTargetingBias = 0.75f;
+
     [SerializeField]
     TextMeshPro scoreText;
+
+    [SerializeField]
+    MeshRenderer goalRenderer;
+
+    [SerializeField, ColorUsage(true, true)]
+    Color goalColor = Color.white;
+
     int score;
     float size, targetingBias;
+    static readonly int
+        emissionColorId = Shader.PropertyToID("_EmissionColor"),
+        faceColorId = Shader.PropertyToID("_FaceColor"),
+        timeOfLastHitId = Shader.PropertyToID("_TimeOfLastHit");
+    Material goalMaterial, paddleMaterial, scoreMaterial;
 
     enum Players
     {
@@ -24,6 +37,10 @@ public class Paddle : MonoBehaviour
 
     void Awake()
     {
+        goalMaterial = goalRenderer.material;
+        goalMaterial.SetColor(emissionColorId, goalColor);
+        paddleMaterial = GetComponent<MeshRenderer>().material;
+        scoreMaterial = scoreText.fontMaterial;
         SetScore(0);
     }
 
@@ -66,15 +83,20 @@ public class Paddle : MonoBehaviour
     {
         ChangeTargetingBias();
         hitFactor = (ballX - transform.localPosition.x) /
-            (size + ballSize); 
-        return -1f <= hitFactor && hitFactor <= 1f;
+            (size + ballSize);
+        bool success = -1f <= hitFactor && hitFactor <= 1f;
+        if (success)
+        {
+            paddleMaterial.SetFloat(timeOfLastHitId, Time.time);
+        }
+        return success;
     }
 
     void SetScore(int newScore, float pointsToWin = 10f)
     {
         score = newScore;
         scoreText.SetText("{0}", newScore);
-
+        scoreMaterial.SetColor(faceColorId, goalColor * (newScore / pointsToWin));
         SetSize(Mathf.Lerp(maxSize, minSize, newScore / (pointsToWin - 1f)));
     }
 
@@ -86,6 +108,7 @@ public class Paddle : MonoBehaviour
 
     public bool ScorePoint(int pointsToWin)
     {
+        goalMaterial.SetFloat(timeOfLastHitId, Time.time);
         SetScore(score + 1, pointsToWin);
         return score >= pointsToWin;
     }

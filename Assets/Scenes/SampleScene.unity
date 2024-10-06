@@ -286,6 +286,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e4680fc34fdefb548af191a62380f319, type: 3}
+--- !u!23 &276796277 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 4819942631033664659, guid: 493c0005b1c240c47b25a08fb3307d2d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1860031356}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &315383465
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -750,6 +756,12 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &495628587 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 4819942631033664659, guid: 493c0005b1c240c47b25a08fb3307d2d,
+    type: 3}
+  m_PrefabInstance: {fileID: 3671429365638024800}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &537796051
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1023,6 +1035,26 @@ PrefabInstance:
       propertyPath: scoreText
       value: 
       objectReference: {fileID: 99272016}
+    - target: {fileID: 7426983376661575731, guid: e410ebf8b6a403a488db651fb1f48329,
+        type: 3}
+      propertyPath: goalColor.b
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7426983376661575731, guid: e410ebf8b6a403a488db651fb1f48329,
+        type: 3}
+      propertyPath: goalColor.g
+      value: 0.5710535
+      objectReference: {fileID: 0}
+    - target: {fileID: 7426983376661575731, guid: e410ebf8b6a403a488db651fb1f48329,
+        type: 3}
+      propertyPath: goalColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7426983376661575731, guid: e410ebf8b6a403a488db651fb1f48329,
+        type: 3}
+      propertyPath: goalRenderer
+      value: 
+      objectReference: {fileID: 495628587}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1638,6 +1670,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Border (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 4819942631033664659, guid: 493c0005b1c240c47b25a08fb3307d2d,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2f6c1c977980a074e810913cb20406b4, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1784,6 +1821,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Border
       objectReference: {fileID: 0}
+    - target: {fileID: 4819942631033664659, guid: 493c0005b1c240c47b25a08fb3307d2d,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2f6c1c977980a074e810913cb20406b4, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1999,6 +2041,26 @@ PrefabInstance:
       propertyPath: scoreText
       value: 
       objectReference: {fileID: 315383466}
+    - target: {fileID: 7426983376661575731, guid: e410ebf8b6a403a488db651fb1f48329,
+        type: 3}
+      propertyPath: goalColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7426983376661575731, guid: e410ebf8b6a403a488db651fb1f48329,
+        type: 3}
+      propertyPath: goalColor.g
+      value: 1.518074
+      objectReference: {fileID: 0}
+    - target: {fileID: 7426983376661575731, guid: e410ebf8b6a403a488db651fb1f48329,
+        type: 3}
+      propertyPath: goalColor.r
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7426983376661575731, guid: e410ebf8b6a403a488db651fb1f48329,
+        type: 3}
+      propertyPath: goalRenderer
+      value: 
+      objectReference: {fileID: 276796277}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
