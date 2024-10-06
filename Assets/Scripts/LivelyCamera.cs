@@ -40,8 +40,8 @@ public class LivelyCamera : MonoBehaviour
     {
         Vector3 displacement = anchorPosition - transform.localPosition;
         Vector3 acceleration = springStrength * displacement - dampingStrength * velocity;
-        Debug.Log(acceleration);
         velocity += acceleration * dt;
+        Debug.Log(velocity);
         transform.localPosition += velocity * dt;
     }
 }
