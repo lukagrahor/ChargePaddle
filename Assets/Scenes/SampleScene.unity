@@ -1015,14 +1015,29 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7426983376661575731, guid: e410ebf8b6a403a488db651fb1f48329,
         type: 3}
+      propertyPath: maxSize
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7426983376661575731, guid: e410ebf8b6a403a488db651fb1f48329,
+        type: 3}
       propertyPath: minSize
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7426983376661575731, guid: e410ebf8b6a403a488db651fb1f48329,
         type: 3}
       propertyPath: scoreText
       value: 
       objectReference: {fileID: 99272016}
+    - target: {fileID: 7426983376661575731, guid: e410ebf8b6a403a488db651fb1f48329,
+        type: 3}
+      propertyPath: chargeResize
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7426983376661575731, guid: e410ebf8b6a403a488db651fb1f48329,
+        type: 3}
+      propertyPath: chargeDuration
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1857,14 +1872,34 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7426983376661575731, guid: e410ebf8b6a403a488db651fb1f48329,
         type: 3}
+      propertyPath: maxSize
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7426983376661575731, guid: e410ebf8b6a403a488db651fb1f48329,
+        type: 3}
       propertyPath: minSize
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7426983376661575731, guid: e410ebf8b6a403a488db651fb1f48329,
         type: 3}
       propertyPath: scoreText
       value: 
       objectReference: {fileID: 315383466}
+    - target: {fileID: 7426983376661575731, guid: e410ebf8b6a403a488db651fb1f48329,
+        type: 3}
+      propertyPath: chargePhases
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7426983376661575731, guid: e410ebf8b6a403a488db651fb1f48329,
+        type: 3}
+      propertyPath: chargeResize
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7426983376661575731, guid: e410ebf8b6a403a488db651fb1f48329,
+        type: 3}
+      propertyPath: chargeDuration
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

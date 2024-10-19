@@ -8,11 +8,24 @@ public class Paddle : MonoBehaviour
         minSize = 2f,
         maxSize = 4f,
         speed = 10f,
-        maxTargetingBias = 0.75f;
+        maxTargetingBias = 0.75f,
+        chargeDuration = 3f,
+        chargeResize = 2.5f;
     [SerializeField]
     TextMeshPro scoreText;
     int score;
     float size, targetingBias;
+    KeyCode
+        goRightKey,
+        goLeftKey,
+        chargeKey;
+
+    float chargeTimer;
+    int chargePhases = 3;
+
+    float minChargeSize = 0;
+    float currentSize = 0;
+   
 
     enum Players
     {
@@ -24,6 +37,7 @@ public class Paddle : MonoBehaviour
 
     void Awake()
     {
+        SetKeys();
         SetScore(0);
     }
 
@@ -48,8 +62,12 @@ public class Paddle : MonoBehaviour
     
     float AdjustByPlayers(float x)
     {
-        bool goRight = player == Players.Player1 ? Input.GetKey(KeyCode.RightArrow) : Input.GetKey(KeyCode.D);
-        bool goLeft = player == Players.Player1 ? Input.GetKey(KeyCode.LeftArrow) : Input.GetKey(KeyCode.A);
+        bool goRight = Input.GetKey(goRightKey);
+        bool goLeft = Input.GetKey(goLeftKey);
+        bool charge = Input.GetKey(chargeKey);
+
+        bool chargeStart = Input.GetKeyDown(chargeKey);
+        bool chargeFinish = Input.GetKeyUp(chargeKey);
 
         if (goRight && !goLeft)
         {
@@ -58,6 +76,18 @@ public class Paddle : MonoBehaviour
         else if (goLeft && !goRight)
         {
             return x - speed * Time.deltaTime;
+        }
+        if (chargeStart) {
+            chargeTimer = 0f;
+            minChargeSize = size - chargeResize;
+            currentSize = size;
+        }
+        else if (chargeFinish) {
+            Debug.Log("Stop charging");
+        }
+        else if (charge)
+        {
+            chargePaddle(minChargeSize, currentSize);
         }
         return x;
     }
@@ -95,9 +125,45 @@ public class Paddle : MonoBehaviour
 
     void SetSize(float newSize)
     {
+        Debug.Log(newSize);
         size = newSize;
         Vector3 s = transform.localScale;
         s.x = 2f * newSize;
         transform.localScale = s;
+    }
+
+    void SetKeys()
+    {
+        goRightKey = player == Players.Player1 ? KeyCode.RightArrow : KeyCode.D;
+        goLeftKey = player == Players.Player1 ? KeyCode.LeftArrow : KeyCode.A;
+        chargeKey = player == Players.Player1 ? KeyCode.Return : KeyCode.Space;
+    }
+
+    void chargePaddle(float minChargeSize, float currentSize)
+    {
+        chargeTimer = chargeTimer < chargeDuration ? chargeTimer + Time.deltaTime : chargeDuration;
+
+        /*
+        float chargeOffset = Mathf.Round((chargeDuration / (float)chargePhases) * 10f) / 10f;
+        Debug.Log("chargeOffset " + chargeOffset);
+        SetSize(size - (chargeTimer * chargeOffset));
+        */
+ 
+        Debug.Log("size "+ currentSize);
+        Debug.Log("minChargeSize " + minChargeSize);
+        Debug.Log("chargeDuration " + chargeDuration);
+        Debug.Log("chargeTimer floor " + Mathf.Floor(chargeTimer));
+
+        float test = Mathf.Lerp(currentSize, minChargeSize, Mathf.Ceil(chargeTimer) / chargeDuration);
+
+        Debug.Log("deljenje: " + Mathf.Ceil(chargeTimer) / chargeDuration);
+        Debug.Log("Lerpanje: " + test);
+
+        SetSize(Mathf.Lerp(currentSize, minChargeSize, Mathf.Ceil(chargeTimer) / chargeDuration));
+        /*
+        Debug.Log("Lerp:");
+        Debug.Log(Mathf.Lerp(currentSize, minChargeSize, chargeDuration / Mathf.Floor(chargeTimer)));
+        Debug.Log("Charging... "+ chargeTimer);
+        */
     }
 }
