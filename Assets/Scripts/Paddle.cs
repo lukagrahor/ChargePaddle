@@ -11,7 +11,6 @@ public class Paddle : MonoBehaviour
         maxTargetingBias = 0.75f,
         chargeDuration = 3f,
         chargeResize = 2.5f;
-        maxTargetingBias = 0.75f;
 
     [SerializeField]
     TextMeshPro scoreText;
