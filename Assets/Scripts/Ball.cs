@@ -9,7 +9,7 @@ public class Ball : MonoBehaviour
     constantYSpeed = 10f,
     halfSize = 0.5f;
 
-    [SerializeField] ParticleSystem impactParticlesSystem, startParticleSystem;
+    [SerializeField] ParticleSystem impactParticlesSystem, startParticleSystem, trailParticleSystem;
     [SerializeField] int impactParticleEmission = 20,
                          startParticleEmission = 100;
 
@@ -25,15 +25,19 @@ public class Ball : MonoBehaviour
         velocity.y = -constantYSpeed;
         gameObject.SetActive(true);
         startParticleSystem.Emit(startParticleEmission);
+        SetTrailEmission(true);
+        trailParticleSystem.Play();
     }
 
     public void EndGame()
     {
         position.x = 0f;
         gameObject.SetActive(false);
+        SetTrailEmission(false);
     }
 
-    public void UpdateVisualization() => transform.localPosition = new Vector3(position.x, 0, position.y);
+    public void UpdateVisualization() => trailParticleSystem.transform.localPosition =
+        transform.localPosition = new Vector3(position.x, 0f, position.y);
 
     public void Move() => position += Time.deltaTime * velocity;
 
@@ -73,6 +77,12 @@ public class Ball : MonoBehaviour
         shape.position = new Vector3(x, 0f, z);
         shape.rotation = new Vector3(0f, rotation, 0f);
         impactParticlesSystem.Emit(impactParticleEmission);
+    }
+
+    void SetTrailEmission(bool enabled)
+    {
+        ParticleSystem.EmissionModule emisson = trailParticleSystem.emission;
+        emisson.enabled = enabled;
     }
 
     public float BallHalfSize => halfSize;
