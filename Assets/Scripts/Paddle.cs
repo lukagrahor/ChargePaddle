@@ -29,6 +29,7 @@ public class Paddle : MonoBehaviour
         chargeKey;
 
     float chargeTimer;
+    [SerializeField]
     int chargePhases = 3;
 
     float minChargeSize = 0;
@@ -47,7 +48,6 @@ public class Paddle : MonoBehaviour
 
     [SerializeField]
     Players player;
-
     void Awake()
     {
         SetKeys();
@@ -101,6 +101,7 @@ public class Paddle : MonoBehaviour
         }
         else if (chargeFinish) {
             Debug.Log("Stop charging");
+            SetSize(currentSize);
         }
         else if (charge)
         {
@@ -165,24 +166,37 @@ public class Paddle : MonoBehaviour
     void chargePaddle(float minChargeSize, float currentSize)
     {
         chargeTimer = chargeTimer < chargeDuration ? chargeTimer + Time.deltaTime : chargeDuration;
+        float resizeSpeed = Mathf.Pow(chargeTimer, 2f)/3f;
 
         /*
         float chargeOffset = Mathf.Round((chargeDuration / (float)chargePhases) * 10f) / 10f;
         Debug.Log("chargeOffset " + chargeOffset);
         SetSize(size - (chargeTimer * chargeOffset));
         */
- 
+
+        float phaseTransitionDuration = chargeDuration / (float)chargePhases;
+        int currentPhase = Mathf.FloorToInt(resizeSpeed / phaseTransitionDuration);
+        //Debug.Log("currentPhase" + currentPhase);
+        float sizePerPhase = (currentSize - minChargeSize) / (float)chargePhases;
+        float newSize = currentSize - (sizePerPhase * (float)currentPhase);
+        //SetSize(newSize);
+        //SetSize(Mathf.Lerp(currentSize, newSize, chargeTimer / phaseTransitionDuration * (float) currentPhase));
+        Debug.Log("MoveTowards: " + Mathf.MoveTowards(currentSize, newSize, resizeSpeed));
+        SetSize(Mathf.MoveTowards(currentSize, newSize, resizeSpeed));
+
+        /*
         Debug.Log("size "+ currentSize);
         Debug.Log("minChargeSize " + minChargeSize);
         Debug.Log("chargeDuration " + chargeDuration);
         Debug.Log("chargeTimer floor " + Mathf.Floor(chargeTimer));
+        */
 
-        float test = Mathf.Lerp(currentSize, minChargeSize, Mathf.Ceil(chargeTimer) / chargeDuration);
+        //float test = Mathf.Lerp(currentSize, minChargeSize, Mathf.Ceil(chargeTimer) / chargeDuration);
 
-        Debug.Log("deljenje: " + Mathf.Ceil(chargeTimer) / chargeDuration);
-        Debug.Log("Lerpanje: " + test);
+        //Debug.Log("deljenje: " + Mathf.Ceil(chargeTimer) / chargeDuration);
+        //Debug.Log("Lerpanje: " + test);
 
-        SetSize(Mathf.Lerp(currentSize, minChargeSize, Mathf.Ceil(chargeTimer) / chargeDuration));
+        //SetSize(Mathf.Lerp(currentSize, minChargeSize, Mathf.Ceil(chargeTimer) / chargeDuration));
         /*
         Debug.Log("Lerp:");
         Debug.Log(Mathf.Lerp(currentSize, minChargeSize, chargeDuration / Mathf.Floor(chargeTimer)));

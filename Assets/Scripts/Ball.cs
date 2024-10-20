@@ -14,19 +14,24 @@ public class Ball : MonoBehaviour
                          startParticleEmission = 100;
 
     Vector2 position, velocity;
+    [SerializeField]
+    bool stopTheGame = false;
 
     void Awake() => gameObject.SetActive(false);
 
     public void StartNewGame()
     {
-        position = Vector2.zero;
-        UpdateVisualization();
-        velocity.x = Random.Range(-maxStartXSpeed, maxStartXSpeed);
-        velocity.y = -constantYSpeed;
-        gameObject.SetActive(true);
-        startParticleSystem.Emit(startParticleEmission);
-        SetTrailEmission(true);
-        trailParticleSystem.Play();
+        if(stopTheGame == false)
+        {
+            position = Vector2.zero;
+            UpdateVisualization();
+            velocity.x = Random.Range(-maxStartXSpeed, maxStartXSpeed);
+            velocity.y = -constantYSpeed;
+            gameObject.SetActive(true);
+            startParticleSystem.Emit(startParticleEmission);
+            SetTrailEmission(true);
+            trailParticleSystem.Play();
+        }
     }
 
     public void EndGame()
