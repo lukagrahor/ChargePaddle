@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -11,6 +12,11 @@ public class Paddle : MonoBehaviour
         maxTargetingBias = 0.75f,
         chargeDuration = 3f,
         chargeResize = 2.5f;
+
+
+    float[] chargeSizes = new float[3];
+    float[] chargeSizeChanges = { 1f, 0.9f, 0.6f };
+    float[] resizeDurations = { 1.25f, 1f, 0.75f};
 
     [SerializeField]
     TextMeshPro scoreText;
@@ -34,7 +40,9 @@ public class Paddle : MonoBehaviour
 
     float minChargeSize = 0;
     float currentSize = 0;
-   
+    int chargeLevel = 0;
+    float waitBetweenCharges = 0f;
+
     static readonly int
         emissionColorId = Shader.PropertyToID("_EmissionColor"),
         faceColorId = Shader.PropertyToID("_FaceColor"),
@@ -86,6 +94,8 @@ public class Paddle : MonoBehaviour
         bool chargeStart = Input.GetKeyDown(chargeKey);
         bool chargeFinish = Input.GetKeyUp(chargeKey);
 
+
+
         if (goRight && !goLeft)
         {
             return x + speed * Time.deltaTime;
@@ -98,6 +108,14 @@ public class Paddle : MonoBehaviour
             chargeTimer = 0f;
             minChargeSize = size - chargeResize;
             currentSize = size;
+            chargeLevel = 0;
+            Debug.Log("chargeSizes");
+            for (int i = 0; i < chargeSizeChanges.Length; i++)
+            {
+                chargeSizes[i] = i == 0 ? size - chargeSizeChanges[i] : chargeSizes[i-1] - chargeSizeChanges[i];
+                Debug.Log(chargeSizes[i]);
+            }
+            waitBetweenCharges = 0.5f;
         }
         else if (chargeFinish) {
             Debug.Log("Stop charging");
@@ -145,7 +163,7 @@ public class Paddle : MonoBehaviour
     }
 
     void ChangeTargetingBias() =>
-        targetingBias = Random.Range(-maxTargetingBias, maxTargetingBias);
+        targetingBias = UnityEngine.Random.Range(-maxTargetingBias, maxTargetingBias);
 
     void SetSize(float newSize)
     {
@@ -166,41 +184,26 @@ public class Paddle : MonoBehaviour
     void chargePaddle(float minChargeSize, float currentSize)
     {
         chargeTimer = chargeTimer < chargeDuration ? chargeTimer + Time.deltaTime : chargeDuration;
-        float resizeSpeed = Mathf.Pow(chargeTimer, 2f)/3f;
+        if (chargeLevel < 3)
+        {
+            float currentResizeDuration = resizeDurations[chargeLevel];
+            currentSize = chargeLevel > 0 ? chargeSizes[chargeLevel - 1] : currentSize;
+            float nextSize =  chargeSizes[chargeLevel];
 
-        /*
-        float chargeOffset = Mathf.Round((chargeDuration / (float)chargePhases) * 10f) / 10f;
-        Debug.Log("chargeOffset " + chargeOffset);
-        SetSize(size - (chargeTimer * chargeOffset));
-        */
-
-        float phaseTransitionDuration = chargeDuration / (float)chargePhases;
-        int currentPhase = Mathf.FloorToInt(resizeSpeed / phaseTransitionDuration);
-        //Debug.Log("currentPhase" + currentPhase);
-        float sizePerPhase = (currentSize - minChargeSize) / (float)chargePhases;
-        float newSize = currentSize - (sizePerPhase * (float)currentPhase);
-        //SetSize(newSize);
-        //SetSize(Mathf.Lerp(currentSize, newSize, chargeTimer / phaseTransitionDuration * (float) currentPhase));
-        Debug.Log("MoveTowards: " + Mathf.MoveTowards(currentSize, newSize, resizeSpeed));
-        SetSize(Mathf.MoveTowards(currentSize, newSize, resizeSpeed));
-
-        /*
-        Debug.Log("size "+ currentSize);
-        Debug.Log("minChargeSize " + minChargeSize);
-        Debug.Log("chargeDuration " + chargeDuration);
-        Debug.Log("chargeTimer floor " + Mathf.Floor(chargeTimer));
-        */
-
-        //float test = Mathf.Lerp(currentSize, minChargeSize, Mathf.Ceil(chargeTimer) / chargeDuration);
-
-        //Debug.Log("deljenje: " + Mathf.Ceil(chargeTimer) / chargeDuration);
-        //Debug.Log("Lerpanje: " + test);
-
-        //SetSize(Mathf.Lerp(currentSize, minChargeSize, Mathf.Ceil(chargeTimer) / chargeDuration));
-        /*
-        Debug.Log("Lerp:");
-        Debug.Log(Mathf.Lerp(currentSize, minChargeSize, chargeDuration / Mathf.Floor(chargeTimer)));
-        Debug.Log("Charging... "+ chargeTimer);
-        */
+            if (chargeTimer >= currentResizeDuration)
+            {
+                waitBetweenCharges -= Time.deltaTime;
+                if (waitBetweenCharges <= 0f)
+                {
+                    waitBetweenCharges = 0.5f;
+                    chargeTimer = 0f;
+                    chargeLevel++;
+                }
+            }
+            else
+            {
+                SetSize(Mathf.Lerp(currentSize, nextSize, chargeTimer / currentResizeDuration));
+            }
+        }
     }
 }
