@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices;
 using TMPro;
 using UnityEngine;
 
@@ -10,13 +11,13 @@ public class Paddle : MonoBehaviour
         maxSize = 4f,
         speed = 10f,
         maxTargetingBias = 0.75f,
-        chargeDuration = 3f,
+        chargeDuration = 1f,
         chargeResize = 2.5f;
 
 
     float[] chargeSizes = new float[3];
     float[] chargeSizeChanges = { 1f, 0.9f, 0.6f };
-    float[] resizeDurations = { 1.25f, 1f, 0.75f};
+    float[] resizeDurations = { 0.5f, 0.3f, 0.2f };
 
     [SerializeField]
     TextMeshPro scoreText;
@@ -35,6 +36,7 @@ public class Paddle : MonoBehaviour
         chargeKey;
 
     float chargeTimer;
+    float chargeOvertime;
     [SerializeField]
     int chargePhases = 3;
 
@@ -42,6 +44,8 @@ public class Paddle : MonoBehaviour
     float currentSize = 0;
     int chargeLevel = 0;
     float waitBetweenCharges = 0f;
+    bool charge = false;
+    bool chargeInterrupt = false;
 
     static readonly int
         emissionColorId = Shader.PropertyToID("_EmissionColor"),
@@ -89,12 +93,10 @@ public class Paddle : MonoBehaviour
     {
         bool goRight = Input.GetKey(goRightKey);
         bool goLeft = Input.GetKey(goLeftKey);
-        bool charge = Input.GetKey(chargeKey);
+        charge = chargeInterrupt == false ? Input.GetKey(chargeKey) : false;
 
         bool chargeStart = Input.GetKeyDown(chargeKey);
         bool chargeFinish = Input.GetKeyUp(chargeKey);
-
-
 
         if (goRight && !goLeft)
         {
@@ -109,21 +111,21 @@ public class Paddle : MonoBehaviour
             minChargeSize = size - chargeResize;
             currentSize = size;
             chargeLevel = 0;
-            Debug.Log("chargeSizes");
+            chargeOvertime = 0f;
             for (int i = 0; i < chargeSizeChanges.Length; i++)
             {
                 chargeSizes[i] = i == 0 ? size - chargeSizeChanges[i] : chargeSizes[i-1] - chargeSizeChanges[i];
-                Debug.Log(chargeSizes[i]);
             }
             waitBetweenCharges = 0.5f;
         }
         else if (chargeFinish) {
             Debug.Log("Stop charging");
             SetSize(currentSize);
+            chargeInterrupt = false;
         }
         else if (charge)
         {
-            chargePaddle(minChargeSize, currentSize);
+            chargePaddle(currentSize);
         }
         return x;
     }
@@ -155,6 +157,11 @@ public class Paddle : MonoBehaviour
         ChangeTargetingBias();
     }
 
+    public void StartNewRound()
+    {
+        ChangeTargetingBias();
+    }
+
     public bool ScorePoint(int pointsToWin)
     {
         goalMaterial.SetFloat(timeOfLastHitId, Time.time);
@@ -167,7 +174,6 @@ public class Paddle : MonoBehaviour
 
     void SetSize(float newSize)
     {
-        Debug.Log(newSize);
         size = newSize;
         Vector3 s = transform.localScale;
         s.x = 2f * newSize;
@@ -181,12 +187,12 @@ public class Paddle : MonoBehaviour
         chargeKey = player == Players.Player1 ? KeyCode.Return : KeyCode.Space;
     }
 
-    void chargePaddle(float minChargeSize, float currentSize)
+    void chargePaddle(float currentSize)
     {
-        chargeTimer = chargeTimer < chargeDuration ? chargeTimer + Time.deltaTime : chargeDuration;
         if (chargeLevel < 3)
         {
             float currentResizeDuration = resizeDurations[chargeLevel];
+            chargeTimer = chargeTimer < currentResizeDuration ? chargeTimer + Time.deltaTime : currentResizeDuration;
             currentSize = chargeLevel > 0 ? chargeSizes[chargeLevel - 1] : currentSize;
             float nextSize =  chargeSizes[chargeLevel];
 
@@ -196,6 +202,8 @@ public class Paddle : MonoBehaviour
                 if (waitBetweenCharges <= 0f)
                 {
                     waitBetweenCharges = 0.5f;
+                    //Debug.Log("chargeOvertime");
+                    //Debug.Log(chargeOvertime);
                     chargeTimer = 0f;
                     chargeLevel++;
                 }
@@ -204,6 +212,10 @@ public class Paddle : MonoBehaviour
             {
                 SetSize(Mathf.Lerp(currentSize, nextSize, chargeTimer / currentResizeDuration));
             }
+        } else
+        {
+            chargeOvertime += Time.deltaTime;
+            chargeInterrupt = chargeOvertime >= 0.5f ? false : true;
         }
     }
 }

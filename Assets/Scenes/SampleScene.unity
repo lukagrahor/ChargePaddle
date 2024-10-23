@@ -739,7 +739,8 @@ MonoBehaviour:
   arenaSize: {x: 10, y: 10}
   pointsToWin: 3
   countdownText: {fileID: 1616114684}
-  newGameDelay: 3
+  newGameDelay: 5
+  newRoundDelay: 3
   livelyCamera: {fileID: 330585548}
 --- !u!4 &415209164
 Transform:

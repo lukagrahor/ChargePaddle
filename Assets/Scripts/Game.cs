@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -12,11 +13,17 @@ public class Game : MonoBehaviour
     TextMeshPro countdownText;
 
     [SerializeField, Min(1f)]
-    float newGameDelay = 3f;
+    float newGameDelay = 5f,
+    newRoundDelay = 3f;
+
+    float currentDelay;
 
     float countdownUntilNewGame;
     [SerializeField]
     LivelyCamera livelyCamera;
+
+    delegate void StartNewGameOrRound();
+    StartNewGameOrRound roundOrGame;
 
     void Update()
     {
@@ -78,7 +85,7 @@ public class Game : MonoBehaviour
         bounceX = ball.Position.x - ball.Velocity.x * durationAfterBounce;
         livelyCamera.PushXZ(ball.Velocity);
         ball.BounceY(boundary);
-        if(defender.HitBall(bounceX, ball.BallHalfSize, out float hitFactor))
+        if (defender.HitBall(bounceX, ball.BallHalfSize, out float hitFactor))
         {
             ball.SetXPositionAndSpeed(bounceX, hitFactor, durationAfterBounce);
         }
@@ -88,11 +95,19 @@ public class Game : MonoBehaviour
             if (attacker.ScorePoint(pointsToWin))
             {
                 EndGame();
+            } else
+            {
+                EndRound();
             }
         }
     }
 
-    void Awake() => countdownUntilNewGame = newGameDelay;
+    void Awake()
+    {
+        roundOrGame = StartNewGame;
+        countdownUntilNewGame = newGameDelay;
+        currentDelay = newGameDelay;
+    }
 
     void StartNewGame()
     {
@@ -101,12 +116,34 @@ public class Game : MonoBehaviour
         paddleTop.StartNewGame();
     }
 
+    void StartNewRound()
+    {
+        ball.StartNewGame();
+        paddleBottom.StartNewRound();
+        paddleTop.StartNewRound();
+    }
+
     void EndGame()
     {
         countdownUntilNewGame = newGameDelay;
         countdownText.SetText("KONEC IGRE");
         countdownText.gameObject.SetActive(true);
         ball.EndGame();
+        Debug.Log("End game");
+        currentDelay = newGameDelay;
+        roundOrGame = StartNewGame;
+    }
+
+    void EndRound()
+    {
+        countdownText.gameObject.SetActive(true);
+        countdownUntilNewGame = newRoundDelay;
+        ball.EndGame();
+        Debug.Log("End round");
+        currentDelay = newRoundDelay;
+        Debug.Log("currentDelay");
+        Debug.Log(currentDelay);
+        roundOrGame = StartNewRound;
     }
 
     void UpdateCountdown()
@@ -115,12 +152,13 @@ public class Game : MonoBehaviour
         if (countdownUntilNewGame <= 0f)
         {
             countdownText.gameObject.SetActive(false);
-            StartNewGame();
+            roundOrGame();
         }
         else
         {
             float displayValue = Mathf.Ceil(countdownUntilNewGame);
-            if (displayValue < newGameDelay)
+            Debug.Log($"displayValue: {displayValue}");
+            if (displayValue < currentDelay)
             {
                 countdownText.SetText("{0}", displayValue);
             }
