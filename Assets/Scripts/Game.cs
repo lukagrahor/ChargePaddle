@@ -29,6 +29,10 @@ public class Game : MonoBehaviour
     {
         paddleBottom.Move(ball.Position.x, arenaSize.x);
         paddleTop.Move(ball.Position.x, arenaSize.x);
+
+        paddleBottom.HandleCharging();
+        paddleTop.HandleCharging();
+
         if (countdownUntilNewGame <= 0f)
         {
             countdownText.gameObject.SetActive(false);
@@ -129,7 +133,6 @@ public class Game : MonoBehaviour
         countdownText.SetText("KONEC IGRE");
         countdownText.gameObject.SetActive(true);
         ball.EndGame();
-        Debug.Log("End game");
         currentDelay = newGameDelay;
         roundOrGame = StartNewGame;
     }
@@ -140,10 +143,11 @@ public class Game : MonoBehaviour
         countdownText.SetText("PRIPRAVLJENI");
         countdownUntilNewGame = newRoundDelay;
         ball.EndGame();
-        Debug.Log("End round");
         currentDelay = newRoundDelay;
-        Debug.Log("currentDelay");
-        Debug.Log(currentDelay);
+        /*
+        paddleBottom.EndRound();
+        paddleTop.EndRound();
+        */
         roundOrGame = StartNewRound;
     }
 
@@ -158,7 +162,6 @@ public class Game : MonoBehaviour
         else
         {
             float displayValue = Mathf.Ceil(countdownUntilNewGame);
-            Debug.Log($"displayValue: {displayValue}");
             if (displayValue < currentDelay)
             {
                 countdownText.SetText("{0}", displayValue);

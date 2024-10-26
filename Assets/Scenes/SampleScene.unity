@@ -739,8 +739,8 @@ MonoBehaviour:
   arenaSize: {x: 10, y: 10}
   pointsToWin: 3
   countdownText: {fileID: 1616114684}
-  newGameDelay: 5
-  newRoundDelay: 3
+  newGameDelay: 2
+  newRoundDelay: 2
   livelyCamera: {fileID: 330585548}
 --- !u!4 &415209164
 Transform:
@@ -2243,7 +2243,7 @@ PrefabInstance:
     - target: {fileID: 3714178716447909360, guid: 315e67bfbd6f4c8418658e82dbaeb5f1,
         type: 3}
       propertyPath: stopTheGame
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3714178716447909360, guid: 315e67bfbd6f4c8418658e82dbaeb5f1,
         type: 3}

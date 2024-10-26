@@ -46,6 +46,7 @@ public class Paddle : MonoBehaviour
     float waitBetweenCharges = 0f;
     bool charge = false;
     bool chargeInterrupt = false;
+    bool endRoundCharge = false;
 
     static readonly int
         emissionColorId = Shader.PropertyToID("_EmissionColor"),
@@ -93,10 +94,6 @@ public class Paddle : MonoBehaviour
     {
         bool goRight = Input.GetKey(goRightKey);
         bool goLeft = Input.GetKey(goLeftKey);
-        charge = chargeInterrupt == false ? Input.GetKey(chargeKey) : false;
-
-        bool chargeStart = Input.GetKeyDown(chargeKey);
-        bool chargeFinish = Input.GetKeyUp(chargeKey);
 
         if (goRight && !goLeft)
         {
@@ -106,27 +103,50 @@ public class Paddle : MonoBehaviour
         {
             return x - speed * Time.deltaTime;
         }
-        if (chargeStart) {
-            chargeTimer = 0f;
-            minChargeSize = size - chargeResize;
-            currentSize = size;
-            chargeLevel = 0;
-            chargeOvertime = 0f;
-            for (int i = 0; i < chargeSizeChanges.Length; i++)
-            {
-                chargeSizes[i] = i == 0 ? size - chargeSizeChanges[i] : chargeSizes[i-1] - chargeSizeChanges[i];
-            }
-            waitBetweenCharges = 0.5f;
-        }
-        else if (chargeFinish || chargeInterrupt) {
-            SetSize(currentSize);
+
+        return x;
+    }
+
+    public void HandleCharging()
+    {
+        charge = chargeInterrupt == false ? Input.GetKey(chargeKey) : false;
+
+        bool chargeStart = Input.GetKeyDown(chargeKey);
+        bool chargeFinish = Input.GetKeyUp(chargeKey);
+
+        Debug.Log("ChargeTimer: " + chargeTimer);
+        Debug.Log("ChargeOvertime " + chargeOvertime);
+
+        if (endRoundCharge)
+        {
+            //Debug.Log("Waiting for the size to set:" + currentSize);
+            //Debug.Log("Size:" + size);
             chargeInterrupt = false;
         }
-        else if (charge)
+        else
         {
-            chargePaddle(currentSize);
+            if (chargeStart)
+            {
+                chargeTimer = 0f;
+                minChargeSize = size - chargeResize;
+                chargeLevel = 0;
+                chargeOvertime = 0f;
+                for (int i = 0; i < chargeSizeChanges.Length; i++)
+                {
+                    chargeSizes[i] = i == 0 ? size - chargeSizeChanges[i] : chargeSizes[i - 1] - chargeSizeChanges[i];
+                }
+                waitBetweenCharges = 0.5f;
+            }
+            else if (chargeFinish || chargeInterrupt)
+            {
+                SetSize(currentSize);
+                chargeInterrupt = false;
+            }
+            else if (charge)
+            {
+                ChargePaddle(currentSize);
+            }
         }
-        return x;
     }
 
     public bool HitBall(float ballX, float ballSize, out float hitFactor)
@@ -147,17 +167,21 @@ public class Paddle : MonoBehaviour
         score = newScore;
         scoreText.SetText("{0}", newScore);
         scoreMaterial.SetColor(faceColorId, goalColor * (newScore / pointsToWin));
+        endRoundCharge = true;
         SetSize(Mathf.Lerp(maxSize, minSize, newScore / (pointsToWin - 1f)));
+        currentSize = size;
     }
 
     public void StartNewGame()
     {
         SetScore(0);
+        endRoundCharge = false;
         ChangeTargetingBias();
     }
 
     public void StartNewRound()
     {
+        endRoundCharge = false;
         ChangeTargetingBias();
     }
 
@@ -186,12 +210,15 @@ public class Paddle : MonoBehaviour
         chargeKey = player == Players.Player1 ? KeyCode.Return : KeyCode.Space;
     }
 
-    void chargePaddle(float currentSize)
+    void ChargePaddle(float currentSize)
     {
         if (chargeLevel < 3)
         {
             float currentResizeDuration = resizeDurations[chargeLevel];
             chargeTimer = chargeTimer < currentResizeDuration ? chargeTimer + Time.deltaTime : currentResizeDuration;
+
+            //Debug.Log("chargeTimer");
+            //Debug.Log(chargeTimer);
             currentSize = chargeLevel > 0 ? chargeSizes[chargeLevel - 1] : currentSize;
             float nextSize =  chargeSizes[chargeLevel];
 
@@ -217,4 +244,10 @@ public class Paddle : MonoBehaviour
             chargeInterrupt = chargeOvertime >= 0.5f ? true : false;
         }
     }
+    /*
+    public void EndRound()
+    {
+        chargeInterrupt = true;
+    }
+    */
 }
