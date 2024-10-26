@@ -118,8 +118,7 @@ public class Paddle : MonoBehaviour
             }
             waitBetweenCharges = 0.5f;
         }
-        else if (chargeFinish) {
-            Debug.Log("Stop charging");
+        else if (chargeFinish || chargeInterrupt) {
             SetSize(currentSize);
             chargeInterrupt = false;
         }
@@ -215,7 +214,7 @@ public class Paddle : MonoBehaviour
         } else
         {
             chargeOvertime += Time.deltaTime;
-            chargeInterrupt = chargeOvertime >= 0.5f ? false : true;
+            chargeInterrupt = chargeOvertime >= 0.5f ? true : false;
         }
     }
 }

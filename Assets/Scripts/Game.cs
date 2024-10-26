@@ -137,6 +137,7 @@ public class Game : MonoBehaviour
     void EndRound()
     {
         countdownText.gameObject.SetActive(true);
+        countdownText.SetText("PRIPRAVLJENI");
         countdownUntilNewGame = newRoundDelay;
         ball.EndGame();
         Debug.Log("End round");
