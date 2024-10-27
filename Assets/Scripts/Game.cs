@@ -109,6 +109,9 @@ public class Game : MonoBehaviour
     void Awake()
     {
         roundOrGame = StartNewGame;
+        /*
+        paddleBottom.StartNewRound();
+        paddleTop.StartNewRound();*/
         countdownUntilNewGame = newGameDelay;
         currentDelay = newGameDelay;
     }

@@ -107,48 +107,6 @@ public class Paddle : MonoBehaviour
         return x;
     }
 
-    public void HandleCharging()
-    {
-        charge = chargeInterrupt == false ? Input.GetKey(chargeKey) : false;
-
-        bool chargeStart = Input.GetKeyDown(chargeKey);
-        bool chargeFinish = Input.GetKeyUp(chargeKey);
-
-        Debug.Log("ChargeTimer: " + chargeTimer);
-        Debug.Log("ChargeOvertime " + chargeOvertime);
-
-        if (endRoundCharge)
-        {
-            //Debug.Log("Waiting for the size to set:" + currentSize);
-            //Debug.Log("Size:" + size);
-            chargeInterrupt = false;
-        }
-        else
-        {
-            if (chargeStart)
-            {
-                chargeTimer = 0f;
-                minChargeSize = size - chargeResize;
-                chargeLevel = 0;
-                chargeOvertime = 0f;
-                for (int i = 0; i < chargeSizeChanges.Length; i++)
-                {
-                    chargeSizes[i] = i == 0 ? size - chargeSizeChanges[i] : chargeSizes[i - 1] - chargeSizeChanges[i];
-                }
-                waitBetweenCharges = 0.5f;
-            }
-            else if (chargeFinish || chargeInterrupt)
-            {
-                SetSize(currentSize);
-                chargeInterrupt = false;
-            }
-            else if (charge)
-            {
-                ChargePaddle(currentSize);
-            }
-        }
-    }
-
     public bool HitBall(float ballX, float ballSize, out float hitFactor)
     {
         ChangeTargetingBias();
@@ -210,8 +168,57 @@ public class Paddle : MonoBehaviour
         chargeKey = player == Players.Player1 ? KeyCode.Return : KeyCode.Space;
     }
 
+    public void HandleCharging()
+    {
+        charge = chargeInterrupt == false ? Input.GetKey(chargeKey) : false;
+
+        bool chargeStart = Input.GetKeyDown(chargeKey);
+        bool chargeFinish = Input.GetKeyUp(chargeKey);
+
+        Debug.Log("ChargeTimer: " + chargeTimer);
+        Debug.Log("ChargeOvertime " + chargeOvertime);
+
+        if (endRoundCharge)
+        {
+            //Debug.Log("Waiting for the size to set:" + currentSize);
+            //Debug.Log("Size:" + size);
+            chargeInterrupt = false;
+            chargeFinish = true;
+            currentSize = size;
+            endRoundCharge = false;
+        }
+
+        if (chargeStart)
+        {
+            chargeTimer = 0f;
+            minChargeSize = size - chargeResize;
+            chargeLevel = 0;
+            chargeOvertime = 0f;
+            for (int i = 0; i < chargeSizeChanges.Length; i++)
+            {
+                chargeSizes[i] = i == 0 ? size - chargeSizeChanges[i] : chargeSizes[i - 1] - chargeSizeChanges[i];
+            }
+            waitBetweenCharges = 0.5f;
+        }
+        else if (chargeFinish)
+        {
+            SetSize(currentSize);
+            chargeInterrupt = false;
+        }
+        else if (chargeInterrupt) // ko poteèe èas charganja, ampak igralec še drži charge gumb
+        {
+            SetSize(currentSize);
+        }
+        else if (charge)
+        {
+            ChargePaddle(currentSize);
+        }
+        
+    }
+
     void ChargePaddle(float currentSize)
     {
+        Debug.Log("Sem v ChargePaddle metodi");
         if (chargeLevel < 3)
         {
             float currentResizeDuration = resizeDurations[chargeLevel];
