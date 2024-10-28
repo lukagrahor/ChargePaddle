@@ -122,28 +122,33 @@ public class Paddle : MonoBehaviour
 
     void SetScore(int newScore, float pointsToWin = 10f)
     {
-        score = newScore;
-        scoreText.SetText("{0}", newScore);
-        scoreMaterial.SetColor(faceColorId, goalColor * (newScore / pointsToWin));
-        // true nardi da ko se ti po konci runde paddle zmanjša ne morš chargat,tega pa neèem da se zgodi na zaèetki vsake igre
-        // endRoundCharge = newScore == 0 ? false : true;
-        endRoundCharge = true;
-        SetSize(Mathf.Lerp(maxSize, minSize, newScore / (pointsToWin - 1f)));
-        //currentSize = newScore == 0 ? size : currentSize;
-        // currentSize = size;
+        score = newScore == -1 ? 0 : newScore;
+        scoreText.SetText("{0}", score);
+        scoreMaterial.SetColor(faceColorId, goalColor * (score / pointsToWin));
+        if (newScore != -1)
+        {
+            Debug.Log("Nje se zdej zajebavat");
+            endRoundCharge = true;
+            SetSize(Mathf.Lerp(maxSize, minSize, score / (pointsToWin - 1f)));
+        }
     }
 
     public void StartNewGame()
     {
-        SetScore(0);
-        //endRoundCharge = false;
+        SetScore(-1);
         ChangeTargetingBias();
     }
 
     public void StartNewRound()
     {
-        //endRoundCharge = false;
         ChangeTargetingBias();
+    }
+
+    public void ResetPaddleSizes()
+    {
+
+        endRoundCharge = true;
+        SetSize(Mathf.Lerp(maxSize, minSize, 0));
     }
 
     public bool ScorePoint(int pointsToWin)
@@ -176,24 +181,15 @@ public class Paddle : MonoBehaviour
         bool chargeStart = Input.GetKeyDown(chargeKey);
         bool chargeFinish = Input.GetKeyUp(chargeKey);
 
-        //Debug.Log("ChargeTimer: " + chargeTimer);
-        //Debug.Log("ChargeOvertime " + chargeOvertime);
-
         if (endRoundCharge)
         {
-            //Debug.Log("Waiting for the size to set:" + currentSize);
-            //Debug.Log("Size:" + size);
             chargeInterrupt = false;
             currentSize = size;
-            Debug.Log("end round charge");
-            Debug.Log("currentSize: " + currentSize);
             charge = false;
         } else
         {
             charge = chargeInterrupt == false ? Input.GetKey(chargeKey) : false;
         }
-
-        Debug.Log("currentSize: " + currentSize);
 
         if (chargeStart)
         {
@@ -206,13 +202,13 @@ public class Paddle : MonoBehaviour
                 chargeSizes[i] = i == 0 ? size - chargeSizeChanges[i] : chargeSizes[i - 1] - chargeSizeChanges[i];
             }
             waitBetweenCharges = 0.5f;
+            endRoundCharge = false;
         }
         else if (chargeFinish)
         {
-            Debug.Log("finished");
             SetSize(currentSize);
             chargeInterrupt = false;
-            endRoundCharge = false;
+            //endRoundCharge = false;
         }
         else if (chargeInterrupt) // ko poteèe èas charganja, ampak igralec še drži charge gumb
         {
@@ -227,14 +223,10 @@ public class Paddle : MonoBehaviour
 
     void ChargePaddle(float currentSize)
     {
-        Debug.Log("Sem v ChargePaddle metodi");
         if (chargeLevel < 3)
         {
             float currentResizeDuration = resizeDurations[chargeLevel];
             chargeTimer = chargeTimer < currentResizeDuration ? chargeTimer + Time.deltaTime : currentResizeDuration;
-
-            //Debug.Log("chargeTimer");
-            //Debug.Log(chargeTimer);
             currentSize = chargeLevel > 0 ? chargeSizes[chargeLevel - 1] : currentSize;
             float nextSize =  chargeSizes[chargeLevel];
 
@@ -244,8 +236,6 @@ public class Paddle : MonoBehaviour
                 if (waitBetweenCharges <= 0f)
                 {
                     waitBetweenCharges = 0.5f;
-                    //Debug.Log("chargeOvertime");
-                    //Debug.Log(chargeOvertime);
                     chargeTimer = 0f;
                     chargeLevel++;
                 }
@@ -260,10 +250,4 @@ public class Paddle : MonoBehaviour
             chargeInterrupt = chargeOvertime >= 0.5f ? true : false;
         }
     }
-    /*
-    public void EndRound()
-    {
-        chargeInterrupt = true;
-    }
-    */
 }

@@ -109,9 +109,6 @@ public class Game : MonoBehaviour
     void Awake()
     {
         roundOrGame = StartNewGame;
-        /*
-        paddleBottom.StartNewRound();
-        paddleTop.StartNewRound();*/
         countdownUntilNewGame = newGameDelay;
         currentDelay = newGameDelay;
     }
@@ -136,6 +133,8 @@ public class Game : MonoBehaviour
         countdownText.SetText("KONEC IGRE");
         countdownText.gameObject.SetActive(true);
         ball.EndGame();
+        paddleBottom.ResetPaddleSizes();
+        paddleTop.ResetPaddleSizes();
         currentDelay = newGameDelay;
         roundOrGame = StartNewGame;
     }
@@ -147,10 +146,6 @@ public class Game : MonoBehaviour
         countdownUntilNewGame = newRoundDelay;
         ball.EndGame();
         currentDelay = newRoundDelay;
-        /*
-        paddleBottom.EndRound();
-        paddleTop.EndRound();
-        */
         roundOrGame = StartNewRound;
     }
 
