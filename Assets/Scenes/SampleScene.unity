@@ -2243,7 +2243,7 @@ PrefabInstance:
     - target: {fileID: 3714178716447909360, guid: 315e67bfbd6f4c8418658e82dbaeb5f1,
         type: 3}
       propertyPath: stopTheGame
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3714178716447909360, guid: 315e67bfbd6f4c8418658e82dbaeb5f1,
         type: 3}

@@ -125,21 +125,24 @@ public class Paddle : MonoBehaviour
         score = newScore;
         scoreText.SetText("{0}", newScore);
         scoreMaterial.SetColor(faceColorId, goalColor * (newScore / pointsToWin));
+        // true nardi da ko se ti po konci runde paddle zmanjša ne morš chargat,tega pa neèem da se zgodi na zaèetki vsake igre
+        // endRoundCharge = newScore == 0 ? false : true;
         endRoundCharge = true;
         SetSize(Mathf.Lerp(maxSize, minSize, newScore / (pointsToWin - 1f)));
-        currentSize = size;
+        //currentSize = newScore == 0 ? size : currentSize;
+        // currentSize = size;
     }
 
     public void StartNewGame()
     {
         SetScore(0);
-        endRoundCharge = false;
+        //endRoundCharge = false;
         ChangeTargetingBias();
     }
 
     public void StartNewRound()
     {
-        endRoundCharge = false;
+        //endRoundCharge = false;
         ChangeTargetingBias();
     }
 
@@ -170,23 +173,27 @@ public class Paddle : MonoBehaviour
 
     public void HandleCharging()
     {
-        charge = chargeInterrupt == false ? Input.GetKey(chargeKey) : false;
-
         bool chargeStart = Input.GetKeyDown(chargeKey);
         bool chargeFinish = Input.GetKeyUp(chargeKey);
 
-        Debug.Log("ChargeTimer: " + chargeTimer);
-        Debug.Log("ChargeOvertime " + chargeOvertime);
+        //Debug.Log("ChargeTimer: " + chargeTimer);
+        //Debug.Log("ChargeOvertime " + chargeOvertime);
 
         if (endRoundCharge)
         {
             //Debug.Log("Waiting for the size to set:" + currentSize);
             //Debug.Log("Size:" + size);
             chargeInterrupt = false;
-            chargeFinish = true;
             currentSize = size;
-            endRoundCharge = false;
+            Debug.Log("end round charge");
+            Debug.Log("currentSize: " + currentSize);
+            charge = false;
+        } else
+        {
+            charge = chargeInterrupt == false ? Input.GetKey(chargeKey) : false;
         }
+
+        Debug.Log("currentSize: " + currentSize);
 
         if (chargeStart)
         {
@@ -202,8 +209,10 @@ public class Paddle : MonoBehaviour
         }
         else if (chargeFinish)
         {
+            Debug.Log("finished");
             SetSize(currentSize);
             chargeInterrupt = false;
+            endRoundCharge = false;
         }
         else if (chargeInterrupt) // ko poteèe èas charganja, ampak igralec še drži charge gumb
         {
