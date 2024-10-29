@@ -54,6 +54,8 @@ public class Paddle : MonoBehaviour
         timeOfLastHitId = Shader.PropertyToID("_TimeOfLastHit");
     Material goalMaterial, paddleMaterial, scoreMaterial;
 
+    float chargeMultiplier = 1f;
+
     enum Players
     {
         Player1, Player2, AI
@@ -203,11 +205,13 @@ public class Paddle : MonoBehaviour
             }
             waitBetweenCharges = 0.5f;
             endRoundCharge = false;
+            chargeMultiplier = 1f;
         }
         else if (chargeFinish)
         {
             SetSize(currentSize);
             chargeInterrupt = false;
+            chargeMultiplier = 1f;
             //endRoundCharge = false;
         }
         else if (chargeInterrupt) // ko poteèe èas charganja, ampak igralec še drži charge gumb
@@ -233,11 +237,17 @@ public class Paddle : MonoBehaviour
             if (chargeTimer >= currentResizeDuration)
             {
                 waitBetweenCharges -= Time.deltaTime;
+                // med vsakim nivojem charge-a je kratek èasovni interval, ko se ob zadetku žogica pohitri
                 if (waitBetweenCharges <= 0f)
                 {
                     waitBetweenCharges = 0.5f;
                     chargeTimer = 0f;
                     chargeLevel++;
+                    chargeMultiplier = 1f;
+                } else
+                {
+                    // tle pospešimo žogco
+                    chargeMultiplier = 1f + ((chargeLevel + 1) * 0.25f);
                 }
             }
             else
@@ -248,6 +258,12 @@ public class Paddle : MonoBehaviour
         {
             chargeOvertime += Time.deltaTime;
             chargeInterrupt = chargeOvertime >= 0.5f ? true : false;
+            chargeMultiplier = 2f;
         }
+    }
+
+    public float getChargeMultiplier()
+    {
+        return chargeMultiplier;
     }
 }
