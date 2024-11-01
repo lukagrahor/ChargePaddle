@@ -6,8 +6,9 @@ public class Ball : MonoBehaviour
     float
     maxXSpeed = 20f,
     maxStartXSpeed = 2f,
-    constantYSpeed = 10f,
-    halfSize = 0.5f;
+    startYSpeed = 10f,
+    halfSize = 0.5f,
+    maxYSpeed = 20f;
 
     [SerializeField] ParticleSystem impactParticlesSystem, startParticleSystem, trailParticleSystem;
     [SerializeField] int impactParticleEmission = 20,
@@ -26,7 +27,7 @@ public class Ball : MonoBehaviour
             position = Vector2.zero;
             UpdateVisualization();
             velocity.x = Random.Range(-maxStartXSpeed, maxStartXSpeed);
-            velocity.y = -constantYSpeed;
+            velocity.y = -startYSpeed;
             gameObject.SetActive(true);
             startParticleSystem.Emit(startParticleEmission);
             SetTrailEmission(true);
@@ -63,7 +64,18 @@ public class Ball : MonoBehaviour
         Debug.Log("chargeMultiplier: " + chargeMultiplier);
         float durationAfterBounce = (position.y - boundary) / velocity.y;
         position.y = 2 * boundary - position.y;
-        velocity.y = -velocity.y * chargeMultiplier;
+        float newSpeed = 0f;
+        if (velocity.y < 0f)
+        {
+            newSpeed = Mathf.Clamp(startYSpeed * chargeMultiplier, -maxYSpeed, maxYSpeed);
+        }
+        else
+        {
+            newSpeed = Mathf.Clamp(-startYSpeed * chargeMultiplier, -maxYSpeed, maxYSpeed);
+        }
+       
+        Debug.Log("newSpeed: "+ newSpeed);
+        velocity.y = newSpeed;
         EmitBounceParticles(
             position.x - velocity.x * durationAfterBounce,
             boundary,
