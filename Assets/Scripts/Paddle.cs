@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class Paddle : MonoBehaviour
 {
+    [SerializeField]
+    int chargePhases = 3;
+
     [SerializeField, Min(0f)]
     float
         minSize = 2f,
@@ -14,6 +17,23 @@ public class Paddle : MonoBehaviour
         chargeDuration = 1f,
         chargeResize = 2.5f;
 
+    float
+        size,
+        targetingBias,
+        minChargeSize = 0,
+        currentSize = 0,
+        chargeTimer,
+        chargeOvertime,
+        waitBetweenCharges = 0f,
+        chargeMultiplier = 1f;
+
+    int 
+        chargeLevel = 0,
+        score;
+
+    bool charge = false,
+        chargeInterrupt = false,
+        endRoundCharge = false;
 
     float[] chargeSizes = new float[3];
     float[] chargeSizeChanges = { 1f, 0.9f, 0.6f };
@@ -28,33 +48,16 @@ public class Paddle : MonoBehaviour
     [SerializeField, ColorUsage(true, true)]
     Color goalColor = Color.white;
 
-    int score;
-    float size, targetingBias;
     KeyCode
         goRightKey,
         goLeftKey,
         chargeKey;
-
-    float chargeTimer;
-    float chargeOvertime;
-    [SerializeField]
-    int chargePhases = 3;
-
-    float minChargeSize = 0;
-    float currentSize = 0;
-    int chargeLevel = 0;
-    float waitBetweenCharges = 0f;
-    bool charge = false;
-    bool chargeInterrupt = false;
-    bool endRoundCharge = false;
 
     static readonly int
         emissionColorId = Shader.PropertyToID("_EmissionColor"),
         faceColorId = Shader.PropertyToID("_FaceColor"),
         timeOfLastHitId = Shader.PropertyToID("_TimeOfLastHit");
     Material goalMaterial, paddleMaterial, scoreMaterial;
-
-    float chargeMultiplier = 1f;
 
     enum Players
     {
