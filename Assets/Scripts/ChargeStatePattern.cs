@@ -8,10 +8,10 @@ public interface IChargeContext
 }
 public interface IChargeStatePattern
 {
-    void StartCharging(IChargeContext Context);
-    void BounceCharged(IChargeContext Context);
-    void BounceNormal(IChargeContext Context);
-    void RunOutOfTime(IChargeContext Context);
+    void StartCharging(IChargeContext context);
+    void BounceCharged(IChargeContext context);
+    void BounceNormal(IChargeContext context);
+    void RunOutOfTime(IChargeContext context);
 }
 
 public class ChargeStatePattern : MonoBehaviour, IChargeContext
@@ -31,25 +31,33 @@ public class ChargeStatePattern : MonoBehaviour, IChargeContext
 
 public class NormalBounceState : IChargeStatePattern
 {
-    public void StartCharging(IChargeContext Context) { }
-    public void BounceCharged(IChargeContext Context) { }
-    public void BounceNormal(IChargeContext Context) { }
-    public void RunOutOfTime(IChargeContext Context) { }
+    public void StartCharging(IChargeContext context) {
+        context.SetState(new ChargeState());
+    }
+    public void BounceCharged(IChargeContext context) { }
+    public void BounceNormal(IChargeContext context) { }
+    public void RunOutOfTime(IChargeContext context) { }
 
 }
 
 public class ChargeState : IChargeStatePattern
 {
-    public void StartCharging(IChargeContext Context) { }
-    public void BounceCharged(IChargeContext Context) { }
-    public void BounceNormal(IChargeContext Context) { }
-    public void RunOutOfTime(IChargeContext Context) { }
+    public void StartCharging(IChargeContext context) { }
+    public void BounceCharged(IChargeContext context) {
+        context.SetState(new ChargedBounceState());
+    }
+    public void BounceNormal(IChargeContext context) {
+        context.SetState(new NormalBounceState());
+    }
+    public void RunOutOfTime(IChargeContext context) {
+        context.SetState(new NormalBounceState());
+    }
 }
 
 public class ChargedBounceState : IChargeStatePattern
 {
-    public void StartCharging(IChargeContext Context) { }
-    public void BounceCharged(IChargeContext Context) { }
-    public void BounceNormal(IChargeContext Context) { }
-    public void RunOutOfTime(IChargeContext Context) { }
+    public void StartCharging(IChargeContext context) { }
+    public void BounceCharged(IChargeContext context) { }
+    public void BounceNormal(IChargeContext context) { }
+    public void RunOutOfTime(IChargeContext context) { }
 }
