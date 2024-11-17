@@ -734,8 +734,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ball: {fileID: 7802480484361116093}
-  paddleTop: {fileID: 5656369848310302825}
-  paddleBottom: {fileID: 1046290702}
+  paddleTop: {fileID: 5656369848310302830}
+  paddleBottom: {fileID: 1046290703}
   arenaSize: {x: 10, y: 10}
   pointsToWin: 3
   countdownText: {fileID: 1616114684}
@@ -1071,23 +1071,45 @@ PrefabInstance:
       propertyPath: chargeDuration
       value: 3
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7426983376661575731, guid: e410ebf8b6a403a488db651fb1f48329, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 323354615802045042, guid: e410ebf8b6a403a488db651fb1f48329,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1046290703}
   m_SourcePrefab: {fileID: 100100000, guid: e410ebf8b6a403a488db651fb1f48329, type: 3}
---- !u!114 &1046290702 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7426983376661575731, guid: e410ebf8b6a403a488db651fb1f48329,
+--- !u!1 &1046290702 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 323354615802045042, guid: e410ebf8b6a403a488db651fb1f48329,
     type: 3}
   m_PrefabInstance: {fileID: 1046290701}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+--- !u!114 &1046290703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1046290702}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25a77de18866f9a45a369e9c64af6701, type: 3}
+  m_Script: {fileID: 11500000, guid: 9587dbd5bbb8c4745ac8ff968e3a3f88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chargePhases: 3
+  minSize: 3
+  maxSize: 5
+  speed: 10
+  maxTargetingBias: 0.75
+  chargeDuration: 1
+  chargeResize: 2.5
+  scoreText: {fileID: 99272016}
+  goalRenderer: {fileID: 495628587}
+  goalColor: {r: 1, g: 1, b: 1, a: 1}
+  player: 0
 --- !u!1001 &1234710248
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1452,6 +1474,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e4680fc34fdefb548af191a62380f319, type: 3}
+--- !u!1 &1596588406 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 323354615802045042, guid: e410ebf8b6a403a488db651fb1f48329,
+    type: 3}
+  m_PrefabInstance: {fileID: 5656369848310302824}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1616114683
 GameObject:
   m_ObjectHideFlags: 0
@@ -2092,23 +2120,39 @@ PrefabInstance:
       propertyPath: chargeDuration
       value: 3
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7426983376661575731, guid: e410ebf8b6a403a488db651fb1f48329, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 323354615802045042, guid: e410ebf8b6a403a488db651fb1f48329,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5656369848310302830}
   m_SourcePrefab: {fileID: 100100000, guid: e410ebf8b6a403a488db651fb1f48329, type: 3}
---- !u!114 &5656369848310302825 stripped
+--- !u!114 &5656369848310302830
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7426983376661575731, guid: e410ebf8b6a403a488db651fb1f48329,
-    type: 3}
-  m_PrefabInstance: {fileID: 5656369848310302824}
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1596588406}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25a77de18866f9a45a369e9c64af6701, type: 3}
+  m_Script: {fileID: 11500000, guid: 9587dbd5bbb8c4745ac8ff968e3a3f88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chargePhases: 3
+  minSize: 3
+  maxSize: 5
+  speed: 10
+  maxTargetingBias: 0.75
+  chargeDuration: 1
+  chargeResize: 2.5
+  scoreText: {fileID: 315383466}
+  goalRenderer: {fileID: 276796277}
+  goalColor: {r: 1, g: 1, b: 1, a: 1}
+  player: 1
 --- !u!1001 &7566394379123260230
 PrefabInstance:
   m_ObjectHideFlags: 0

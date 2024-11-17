@@ -5,7 +5,8 @@ using UnityEngine;
 public class Game : MonoBehaviour
 {
     [SerializeField] Ball ball;
-    [SerializeField] Paddle paddleTop, paddleBottom;
+    [SerializeField] PaddleWithState paddleTop;
+    [SerializeField] PaddleWithState paddleBottom;
     [SerializeField, Min(0f)] Vector2 arenaSize = new Vector2(10f, 10f);
     [SerializeField, Min(2)] int pointsToWin = 3;
 
@@ -80,7 +81,7 @@ public class Game : MonoBehaviour
         }
     }
 
-    void BounceY(float boundary, Paddle defender, Paddle attacker)
+    void BounceY(float boundary, PaddleWithState defender, PaddleWithState attacker)
     {
         float durationAfterBounce = (ball.Position.y - boundary) / ball.Velocity.y;
         float bounceX = ball.Position.x - ball.Velocity.x * durationAfterBounce;
