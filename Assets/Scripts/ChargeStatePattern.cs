@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,7 +20,7 @@ public interface IChargeStatePattern
 
 public class ChargeStatePattern : MonoBehaviour, IChargeContext
 {
-    IChargeStatePattern currentState = new NormalBounceState();
+    IChargeStatePattern currentState = new NormalBounceState(5f);
     PaddleWithState paddle;
     void Awake()
     {
@@ -45,8 +46,19 @@ public class ChargeStatePattern : MonoBehaviour, IChargeContext
 
 public class NormalBounceState : IChargeStatePattern
 {
+    float currentSize;
+    float[] chargeSizes = new float[3];
+    float[] chargeSizeChanges = { 1f, 0.9f, 0.6f };
+    float[] resizeDurations = { 0.5f, 0.3f, 0.2f };
+    public NormalBounceState(float currentSize)
+    {
+        this.currentSize = currentSize;
+    }
+
     public void StartCharging(IChargeContext context) {
-        ChargePaddle(1);
+        int chargeLevel = 0;
+        float chargeTimer = 0f;
+        ChargePaddle(chargeLevel, chargeTimer);
         context.SetState(new ChargeTransitionState());
     }
     public void StopCharging(IChargeContext context) { }
@@ -55,17 +67,15 @@ public class NormalBounceState : IChargeStatePattern
     public void RunOutOfTime(IChargeContext context) { }
     public void PerformAChargedBounce(IChargeContext context) { }
 
-    int chargeLevel = 0;
-    float[] chargeSizes = new float[3];
-    float[] chargeSizeChanges = { 1f, 0.9f, 0.6f };
-    float[] resizeDurations = { 0.5f, 0.3f, 0.2f };
-    float chargeTimer = 0f;
-
-    void ChargePaddle(float currentSize)
+    void ChargePaddle(int chargeLevel, float chargeTimer)
     {
         if (chargeLevel < 3)
         {
             float currentResizeDuration = resizeDurations[chargeLevel];
+            chargeTimer = chargeTimer < currentResizeDuration ? chargeTimer + Time.deltaTime : currentResizeDuration;
+            currentSize = chargeLevel > 0 ? chargeSizes[chargeLevel - 1] : currentSize;
+            Debug.Log("currentResizeDuration");
+            Debug.Log(currentResizeDuration);
         }
         /*
         if (chargeLevel < 3)
@@ -112,7 +122,7 @@ public class ChargeTransitionState : IChargeStatePattern
 {
     public void StartCharging(IChargeContext context) { }
     public void StopCharging(IChargeContext context) {
-        context.SetState(new NormalBounceState());
+        context.SetState(new NormalBounceState(5f));
     }
     public void StartPowerTime(IChargeContext context) {
         context.SetState(new PowerfulChargeState());
@@ -135,7 +145,7 @@ public class PowerfulChargeState : IChargeStatePattern
     }
     public void RunOutOfTime(IChargeContext context)
     {
-        context.SetState(new NormalBounceState());
+        context.SetState(new NormalBounceState(5f));
     }
     public void PerformAChargedBounce(IChargeContext context) { }
 }
@@ -148,6 +158,6 @@ public class ChargedBounceState : IChargeStatePattern
     public void EndPowerTime(IChargeContext context) { }
     public void RunOutOfTime(IChargeContext context) { }
     public void PerformAChargedBounce(IChargeContext context) {
-        context.SetState(new NormalBounceState());
+        context.SetState(new NormalBounceState(5f));
     }
 }
