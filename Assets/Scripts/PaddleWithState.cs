@@ -165,7 +165,7 @@ public class PaddleWithState : MonoBehaviour
     void ChangeTargetingBias() =>
         targetingBias = UnityEngine.Random.Range(-maxTargetingBias, maxTargetingBias);
 
-    void SetSize(float newSize)
+    public void SetSize(float newSize)
     {
         size = newSize;
         Vector3 s = transform.localScale;
