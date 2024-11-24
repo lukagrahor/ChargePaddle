@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using TMPro;
 using UnityEngine;
@@ -11,14 +12,14 @@ public class PaddleWithState : MonoBehaviour
     [SerializeField, Min(0f)]
     float
         minSize = 2f,
-        maxSize = 4f,
+        maxSize = 5f,
         speed = 10f,
         maxTargetingBias = 0.75f,
         chargeDuration = 1f,
         chargeResize = 2.5f;
 
     float
-        size,
+        size = 5f,
         targetingBias,
         minChargeSize = 0,
         currentSize = 0,
@@ -44,7 +45,7 @@ public class PaddleWithState : MonoBehaviour
     MeshRenderer goalRenderer;
 
     [SerializeField, ColorUsage(true, true)]
-    Color goalColor = Color.white;
+    UnityEngine.Color goalColor = UnityEngine.Color.white;
 
     KeyCode
         goRightKey,
@@ -236,5 +237,10 @@ public class PaddleWithState : MonoBehaviour
     public float getChargeMultiplier()
     {
         return chargeMultiplier;
+    }
+
+    public float getSize()
+    {
+        return size;
     }
 }
