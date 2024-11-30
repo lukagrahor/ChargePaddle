@@ -148,6 +148,8 @@ public class Game : MonoBehaviour
         ball.EndGame();
         currentDelay = newRoundDelay;
         roundOrGame = StartNewRound;
+        paddleBottom.StopChargingAfterRound();
+        paddleTop.StopChargingAfterRound();
     }
 
     void UpdateCountdown()

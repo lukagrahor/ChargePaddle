@@ -33,8 +33,8 @@ public class PaddleWithState : MonoBehaviour
         score;
 
     bool charge = false,
-        chargeInterrupt = false,
-        endRoundCharge = false;
+        chargeInterrupt = false;
+        //endRoundCharge = false;
 
 
 
@@ -133,7 +133,7 @@ public class PaddleWithState : MonoBehaviour
         scoreMaterial.SetColor(faceColorId, goalColor * (score / pointsToWin));
         if (newScore != -1)
         {
-            endRoundCharge = true;
+            //endRoundCharge = true;
             SetSize(Mathf.Lerp(maxSize, minSize, score / (pointsToWin - 1f)));
         }
     }
@@ -152,7 +152,7 @@ public class PaddleWithState : MonoBehaviour
     public void ResetPaddleSizes()
     {
 
-        endRoundCharge = true;
+        //endRoundCharge = true;
         SetSize(Mathf.Lerp(maxSize, minSize, 0));
     }
 
@@ -234,6 +234,11 @@ public class PaddleWithState : MonoBehaviour
             ChargePaddle(currentSize);
         }
         */
+    }
+
+    public void StopChargingAfterRound()
+    {
+        ChargeStateManager.StopCharging();
     }
 
     public float getChargeMultiplier()
