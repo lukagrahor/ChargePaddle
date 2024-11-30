@@ -79,6 +79,7 @@ public class NormalBounceState : IChargeStatePattern
     public void EnterState(PaddleWithState paddle) {
         Debug.Log("Normalno stanje");
         this.paddle = paddle;
+        paddle.SetSize(originalSize);
     }
     public void UpdateState(IChargeContext context) { }
 }
@@ -255,7 +256,7 @@ public class PowerfulChargeState : IChargeStatePattern
     public void RunOutOfTime(IChargeContext context)
     {
         Debug.Log("Teci ven iz èasa");
-        paddle.SetSize(originalSize);
+        //paddle.SetSize(originalSize);
         context.SetState(new NormalBounceState(originalSize));
     }
     public void PerformAChargedBounce(IChargeContext context) { }
