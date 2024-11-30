@@ -35,12 +35,12 @@ public class ChargeStatePattern : MonoBehaviour, IChargeContext
 
     void Update()
     {
-        Debug.Log("Updating current state: " + currentState.GetType().Name);
+        //Debug.Log("Updating current state: " + currentState.GetType().Name);
         currentState.UpdateState(this);
     }
 
     public void StartCharging() => currentState.StartCharging(this);
-    public void StopCharging() => currentState.StartCharging(this);
+    public void StopCharging() => currentState.StopCharging(this);
     public void StartPowerTime() => currentState.StartPowerTime(this);
     public void EndPowerTime() => currentState.EndPowerTime(this);
     public void RunOutOfTime() => currentState.RunOutOfTime(this);
@@ -66,14 +66,18 @@ public class NormalBounceState : IChargeStatePattern
     }
 
     public void StartCharging(IChargeContext context) {
+        Debug.Log("StartCharging in normal");
         context.SetState(new ChargeTransitionState(originalSize, 0));
     }
-    public void StopCharging(IChargeContext context) { }
+    public void StopCharging(IChargeContext context) {
+        Debug.Log("StopCharging normal");
+    }
     public void StartPowerTime(IChargeContext context) { }
     public void EndPowerTime(IChargeContext context) { }
     public void RunOutOfTime(IChargeContext context) { }
     public void PerformAChargedBounce(IChargeContext context) { }
     public void EnterState(PaddleWithState paddle) {
+        Debug.Log("Normalno stanje");
         this.paddle = paddle;
     }
     public void UpdateState(IChargeContext context) { }
@@ -96,8 +100,11 @@ public class ChargeTransitionState : IChargeStatePattern
         this.originalSize = originalSize;
         this.chargeLevel = chargeLevel;
     }
-    public void StartCharging(IChargeContext context) { }
+    public void StartCharging(IChargeContext context) {
+        Debug.Log("StartCharging in transition");
+    }
     public void StopCharging(IChargeContext context) {
+        Debug.Log("StopCharging in transition");
         context.SetState(new NormalBounceState(originalSize));
     }
     public void StartPowerTime(IChargeContext context) {
@@ -112,7 +119,7 @@ public class ChargeTransitionState : IChargeStatePattern
         chargeTimer = 0f;
         chargeSizes = getSizes();
         //Debug.Log("chargeLevel: "+ chargeLevel);
-        Debug.Log("Evo me");
+        Debug.Log("Evo me v transition");
     }
     public void UpdateState(IChargeContext context)
     {
@@ -134,7 +141,7 @@ public class ChargeTransitionState : IChargeStatePattern
             chargeTimer = chargeTimer < currentResizeDuration ? chargeTimer + Time.deltaTime : currentResizeDuration;
             currentSize = chargeLevel > 0 ? chargeSizes[chargeLevel - 1] : originalSize;
             float nextSize = chargeSizes[chargeLevel];
-            Debug.Log("nextSize: " + nextSize);
+            //Debug.Log("nextSize: " + nextSize);
 
             // dokler traja nivo charge-anja manjšam paddle
             if (chargeTimer < currentResizeDuration)
@@ -236,6 +243,7 @@ public class PowerfulChargeState : IChargeStatePattern
 
     public void StartCharging(IChargeContext context) { }
     public void StopCharging(IChargeContext context) {
+        Debug.Log("StopCharging PowerfulCharge");
         context.SetState(new ChargedBounceState());
     }
     public void StartPowerTime(IChargeContext context) { }
@@ -257,20 +265,22 @@ public class PowerfulChargeState : IChargeStatePattern
         //Debug.Log("paddle current size: "+ originalSize);
     }
     public void UpdateState(IChargeContext context) {
-        Debug.Log("Sm v updejti");
+        //Debug.Log("Sm v updejti");
         if (powerfulStateTimer > 0f)
         {
             powerfulStateTimer -= Time.deltaTime;
-            Debug.Log("powerfulStateTimer: "+ powerfulStateTimer);
+            //Debug.Log("powerfulStateTimer: "+ powerfulStateTimer);
         } else
         {
-            Debug.Log("èarž level: " + chargelevel);
+            //Debug.Log("èarž level: " + chargelevel);
             if (chargelevel == 2) {
                 // ko je konèana zadnja stopnja charge-anja povrni paddle v svojo originalo velikost
                 RunOutOfTime(context);
+            } else
+            {
+                // back to transition charge state
+                EndPowerTime(context);
             }
-            // back to transition charge state
-            EndPowerTime(context);
         }
     }
 }
@@ -279,7 +289,9 @@ public class ChargedBounceState : IChargeStatePattern
 {
     PaddleWithState paddle;
     public void StartCharging(IChargeContext context) { }
-    public void StopCharging(IChargeContext context) { }
+    public void StopCharging(IChargeContext context) {
+        Debug.Log("StopCharging ChargedBounce");
+    }
     public void StartPowerTime(IChargeContext context) { }
     public void EndPowerTime(IChargeContext context) { }
     public void RunOutOfTime(IChargeContext context) { }
@@ -287,11 +299,43 @@ public class ChargedBounceState : IChargeStatePattern
         context.SetState(new NormalBounceState(5f));
     }
     public void EnterState(PaddleWithState paddle) {
+        Debug.Log("Napeto stanje");
         this.paddle = paddle;
     }
     public void UpdateState(IChargeContext context) {
-        Debug.Log("I am charged");
+        //Debug.Log("I am charged");
         // charged bounce
         PerformAChargedBounce(context);
     }
 }
+
+// used to disable charging when still pressing space after the timer has run out
+/*
+public class AfterChargeState : IChargeStatePattern
+{
+    PaddleWithState paddle;
+    float originalSize;
+
+    public AfterChargeState(float originalSize)
+    {
+        this.originalSize = originalSize;
+    }
+    public void StartCharging(IChargeContext context) {
+        Debug.Log("StartCharging AfterChargeState");
+    }
+    public void StopCharging(IChargeContext context) {
+        Debug.Log("StopCharging AfterChargeState");
+        context.SetState(new NormalBounceState(originalSize));
+    }
+    public void StartPowerTime(IChargeContext context) { }
+    public void EndPowerTime(IChargeContext context) { }
+    public void RunOutOfTime(IChargeContext context) { }
+    public void PerformAChargedBounce(IChargeContext context){ }
+    public void EnterState(PaddleWithState paddle)
+    {
+        Debug.Log("Po charge-i stanje");
+        this.paddle = paddle;
+    }
+    public void UpdateState(IChargeContext context) { }
+}
+*/

@@ -186,10 +186,12 @@ public class PaddleWithState : MonoBehaviour
         if (Input.GetKeyDown(chargeKey))
         {
             ChargeStateManager.StartCharging();
+            Debug.Log("Dej chargej");
         }
         else if (Input.GetKeyUp(chargeKey))
         {
             ChargeStateManager.StopCharging();
+            Debug.Log("Dej jnjej -- space spušèen");
         }
         /*
         if (endRoundCharge)
