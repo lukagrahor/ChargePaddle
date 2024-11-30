@@ -80,6 +80,7 @@ public class NormalBounceState : IChargeStatePattern
         Debug.Log("Normalno stanje");
         this.paddle = paddle;
         paddle.SetSize(originalSize);
+        paddle.SetChargeMultiplier(1f);
     }
     public void UpdateState(IChargeContext context) { }
 }
@@ -234,24 +235,24 @@ public class PowerfulChargeState : IChargeStatePattern
     PaddleWithState paddle;
     float powerfulStateTimer = 0.5f;
     float originalSize;
-    int chargelevel;
+    int chargeLevel;
 
     public PowerfulChargeState(float originalSize, int chargeLevel)
     {
         this.originalSize = originalSize;
-        this.chargelevel = chargeLevel;
+        this.chargeLevel = chargeLevel;
     }
 
     public void StartCharging(IChargeContext context) { }
     public void StopCharging(IChargeContext context) {
         Debug.Log("StopCharging PowerfulCharge");
-        context.SetState(new ChargedBounceState());
+        context.SetState(new ChargedBounceState(originalSize));
     }
     public void StartPowerTime(IChargeContext context) { }
     public void EndPowerTime(IChargeContext context)
     {
-        chargelevel++;
-        context.SetState(new ChargeTransitionState(originalSize, chargelevel));
+        chargeLevel++;
+        context.SetState(new ChargeTransitionState(originalSize, chargeLevel));
     }
     public void RunOutOfTime(IChargeContext context)
     {
@@ -274,7 +275,7 @@ public class PowerfulChargeState : IChargeStatePattern
         } else
         {
             //Debug.Log("èarž level: " + chargelevel);
-            if (chargelevel == 2) {
+            if (chargeLevel == 2) {
                 // ko je konèana zadnja stopnja charge-anja povrni paddle v svojo originalo velikost
                 RunOutOfTime(context);
             } else
@@ -289,6 +290,12 @@ public class PowerfulChargeState : IChargeStatePattern
 public class ChargedBounceState : IChargeStatePattern
 {
     PaddleWithState paddle;
+    float originalSize;
+    float chargeWindow = 1.5f;
+    public ChargedBounceState(float originalSize)
+    {
+        this.originalSize = originalSize;
+    }
     public void StartCharging(IChargeContext context) { }
     public void StopCharging(IChargeContext context) {
         Debug.Log("StopCharging ChargedBounce");
@@ -297,15 +304,22 @@ public class ChargedBounceState : IChargeStatePattern
     public void EndPowerTime(IChargeContext context) { }
     public void RunOutOfTime(IChargeContext context) { }
     public void PerformAChargedBounce(IChargeContext context) {
-        context.SetState(new NormalBounceState(5f));
+        
+        context.SetState(new NormalBounceState(originalSize));
     }
     public void EnterState(PaddleWithState paddle) {
         Debug.Log("Napeto stanje");
+        paddle.SetChargeMultiplier(3f);
         this.paddle = paddle;
     }
     public void UpdateState(IChargeContext context) {
         //Debug.Log("I am charged");
         // charged bounce
+        while (chargeWindow > 0f)
+        {
+            // èakej in spremeni barvo
+            chargeWindow -= Time.deltaTime;
+        }
         PerformAChargedBounce(context);
     }
 }

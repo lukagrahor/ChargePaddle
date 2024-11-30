@@ -89,7 +89,7 @@ public class Game : MonoBehaviour
         BounceXIfNeeded(bounceX);
         bounceX = ball.Position.x - ball.Velocity.x * durationAfterBounce;
         livelyCamera.PushXZ(ball.Velocity);
-        ball.BounceY(boundary, defender.getChargeMultiplier());
+        ball.BounceY(boundary, defender.GetChargeMultiplier());
         if (defender.HitBall(bounceX, ball.BallHalfSize, out float hitFactor))
         {
             ball.SetXPositionAndSpeed(bounceX, hitFactor, durationAfterBounce);

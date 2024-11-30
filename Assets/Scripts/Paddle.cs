@@ -265,8 +265,13 @@ public class Paddle : MonoBehaviour
         }
     }
 
-    public float getChargeMultiplier()
+    public float GetChargeMultiplier()
     {
         return chargeMultiplier;
+    }
+
+    public void SetChargeMultiplier(float chargeMultiplier)
+    {
+       this.chargeMultiplier = chargeMultiplier;
     }
 }

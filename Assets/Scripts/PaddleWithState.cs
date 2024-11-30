@@ -241,9 +241,14 @@ public class PaddleWithState : MonoBehaviour
         ChargeStateManager.StopCharging();
     }
 
-    public float getChargeMultiplier()
+    public float GetChargeMultiplier()
     {
         return chargeMultiplier;
+    }
+
+    public void SetChargeMultiplier(float chargeMultiplier)
+    {
+        this.chargeMultiplier = chargeMultiplier;
     }
 
     public float getSize()
