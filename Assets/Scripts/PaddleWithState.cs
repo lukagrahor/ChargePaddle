@@ -238,6 +238,7 @@ public class PaddleWithState : MonoBehaviour
 
     public void StopChargingAfterRound()
     {
+        ChargeStateManager.SetOriginalSize(size);
         ChargeStateManager.StopCharging();
     }
 

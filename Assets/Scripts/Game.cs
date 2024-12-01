@@ -138,6 +138,8 @@ public class Game : MonoBehaviour
         paddleTop.ResetPaddleSizes();
         currentDelay = newGameDelay;
         roundOrGame = StartNewGame;
+        paddleBottom.StopChargingAfterRound();
+        paddleTop.StopChargingAfterRound();
     }
 
     void EndRound()

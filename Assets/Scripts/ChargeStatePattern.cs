@@ -18,17 +18,20 @@ public interface IChargeStatePattern
     void PerformAChargedBounce(IChargeContext context);
     void EnterState(PaddleWithState paddle);
     void UpdateState(IChargeContext context);
+    void SetOriginalSize(float originalSize);
 }
 
 public class ChargeStatePattern : MonoBehaviour, IChargeContext
 {
     PaddleWithState paddle;
     IChargeStatePattern currentState;
+    float originalSize;
     void Awake()
     {
         //paddle = (PaddleWithState)this.gameObject;
         paddle = GetComponent<PaddleWithState>();
         currentState = new NormalBounceState(paddle.getSize());
+        originalSize = paddle.getSize();
         //Debug.Log("paddle", paddle);
         //Debug.Log("paddle size: " + (paddle.getSize()));
     }
@@ -47,6 +50,7 @@ public class ChargeStatePattern : MonoBehaviour, IChargeContext
     public void PerformAChargedBounce() => currentState.PerformAChargedBounce(this);
     public void EnterState(PaddleWithState paddle) => currentState.EnterState(paddle);
     public void UpdateState() => currentState.UpdateState(this);
+    public void SetOriginalSize(float originalSize) => currentState.SetOriginalSize(originalSize);
 
 
     void IChargeContext.SetState(IChargeStatePattern newState)
@@ -82,7 +86,14 @@ public class NormalBounceState : IChargeStatePattern
         paddle.SetSize(originalSize);
         paddle.SetChargeMultiplier(1f);
     }
+    public void NewRoundSize()
+    {
+        originalSize = paddle.getSize();
+    }
     public void UpdateState(IChargeContext context) { }
+    public void SetOriginalSize(float originalSize) {
+        this.originalSize = originalSize;
+    }
 }
 
 public class ChargeTransitionState : IChargeStatePattern
@@ -169,63 +180,14 @@ public class ChargeTransitionState : IChargeStatePattern
         return chargeSizes;
     }
 
+    public void SetOriginalSize(float originalSize)
+    {
+        this.originalSize = originalSize;
+    }
+
     /*
 void PrepareForCharging() {
     float[] chargeSizes = getSizes();
-}
-
-void ChargePaddle(int chargeLevel, float chargeTimer)
-{
-    if (chargeLevel < 3)
-    {
-        float[] chargeSizes = getSizes();
-        float currentResizeDuration = resizeDurations[chargeLevel];
-        chargeTimer = chargeTimer < currentResizeDuration ? chargeTimer + Time.deltaTime : currentResizeDuration;
-        currentSize = chargeLevel > 0 ? chargeSizes[chargeLevel - 1] : currentSize;
-        float nextSize = chargeSizes[chargeLevel];
-        Debug.Log("currentResizeDuration");
-        Debug.Log(currentResizeDuration);
-        Debug.Log("currentSize");
-        Debug.Log(currentSize);
-
-    }
-
-    if (chargeLevel < 3)
-    {
-        float currentResizeDuration = resizeDurations[chargeLevel];
-        chargeTimer = chargeTimer < currentResizeDuration ? chargeTimer + Time.deltaTime : currentResizeDuration;
-        currentSize = chargeLevel > 0 ? chargeSizes[chargeLevel - 1] : currentSize;
-        float nextSize = chargeSizes[chargeLevel];
-
-        if (chargeTimer >= currentResizeDuration)
-        {
-            waitBetweenCharges -= Time.deltaTime;
-            // med vsakim nivojem charge-a je kratek èasovni interval, ko se ob zadetku žogica pohitri
-            if (waitBetweenCharges <= 0f)
-            {
-                waitBetweenCharges = 0.5f;
-                chargeTimer = 0f;
-                chargeLevel++;
-                chargeMultiplier = 1f;
-            }
-            else
-            {
-                // tle pospešimo žogco
-                chargeMultiplier = 1f + ((chargeLevel + 1) * 0.25f);
-            }
-        }
-        else
-        {
-            SetSize(Mathf.Lerp(currentSize, nextSize, chargeTimer / currentResizeDuration));
-        }
-    }
-    else
-    {
-        chargeOvertime += Time.deltaTime;
-        chargeInterrupt = chargeOvertime >= 0.5f ? true : false;
-        chargeMultiplier = 2f;
-    }
-
 }
 */
 }
@@ -285,6 +247,10 @@ public class PowerfulChargeState : IChargeStatePattern
             }
         }
     }
+
+    public void SetOriginalSize(float originalSize) {
+        this.originalSize = originalSize;
+    }
 }
 
 public class ChargedBounceState : IChargeStatePattern
@@ -292,7 +258,7 @@ public class ChargedBounceState : IChargeStatePattern
     PaddleWithState paddle;
     float originalSize;
     // how much time after the space is released the ball will bounce with a faster speed
-    float chargeWindow = 0.25f;
+    float chargeWindow = 0.15f;
     public ChargedBounceState(float originalSize)
     {
         this.originalSize = originalSize;
@@ -326,6 +292,11 @@ public class ChargedBounceState : IChargeStatePattern
         {
             PerformAChargedBounce(context);
         }
+    }
+
+    public void SetOriginalSize(float originalSize)
+    {
+        this.originalSize = originalSize;
     }
 }
 
