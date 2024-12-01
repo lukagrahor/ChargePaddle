@@ -1099,13 +1099,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9587dbd5bbb8c4745ac8ff968e3a3f88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chargePhases: 3
   minSize: 3
   maxSize: 5
   speed: 10
   maxTargetingBias: 0.75
-  chargeDuration: 1
-  chargeResize: 2.5
   scoreText: {fileID: 99272016}
   goalRenderer: {fileID: 495628587}
   goalColor: {r: 1, g: 1, b: 1, a: 1}
@@ -2142,13 +2139,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9587dbd5bbb8c4745ac8ff968e3a3f88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chargePhases: 3
   minSize: 3
   maxSize: 5
   speed: 10
   maxTargetingBias: 0.75
-  chargeDuration: 1
-  chargeResize: 2.5
   scoreText: {fileID: 315383466}
   goalRenderer: {fileID: 276796277}
   goalColor: {r: 1, g: 1, b: 1, a: 1}

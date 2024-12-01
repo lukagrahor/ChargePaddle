@@ -6,17 +6,12 @@ using UnityEngine;
 
 public class PaddleWithState : MonoBehaviour
 {
-    [SerializeField]
-    int chargePhases = 3;
-
     [SerializeField, Min(0f)]
     float
         minSize = 2f,
         maxSize = 5f,
         speed = 10f,
-        maxTargetingBias = 0.75f,
-        chargeDuration = 1f,
-        chargeResize = 2.5f;
+        maxTargetingBias = 0.75f;
 
     float
         size = 5f,
@@ -195,8 +190,15 @@ public class PaddleWithState : MonoBehaviour
         this.chargeMultiplier = chargeMultiplier;
     }
 
-    public float getSize()
+    public float GetSize()
     {
         return size;
+    }
+
+    public void SetPaddleColor(UnityEngine.Color color)
+    {
+        Debug.Log("Spremeni barvo");
+        paddleMaterial.SetColor(emissionColorId, color);
+        paddleMaterial.SetFloat(timeOfLastHitId, Time.time);
     }
 }

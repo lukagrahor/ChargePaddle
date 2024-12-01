@@ -92,6 +92,7 @@ public class Game : MonoBehaviour
         ball.BounceY(boundary, defender.GetChargeMultiplier());
         if (defender.HitBall(bounceX, ball.BallHalfSize, out float hitFactor))
         {
+            defender.SetPaddleColor(UnityEngine.Color.white);
             ball.SetXPositionAndSpeed(bounceX, hitFactor, durationAfterBounce);
         }
         else

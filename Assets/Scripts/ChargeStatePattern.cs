@@ -29,8 +29,8 @@ public class ChargeStatePattern : MonoBehaviour, IChargeContext
     void Awake()
     {
         paddle = GetComponent<PaddleWithState>();
-        currentState = new NormalBounceState(paddle.getSize());
-        originalSize = paddle.getSize();
+        currentState = new NormalBounceState(paddle.GetSize());
+        originalSize = paddle.GetSize();
     }
 
     void Update()
@@ -84,7 +84,7 @@ public class NormalBounceState : IChargeStatePattern
     }
     public void NewRoundSize()
     {
-        originalSize = paddle.getSize();
+        originalSize = paddle.GetSize();
     }
     public void UpdateState(IChargeContext context) { }
     public void SetOriginalSize(float originalSize) {
@@ -196,6 +196,7 @@ public class PowerfulChargeState : IChargeStatePattern
     public void PerformAChargedBounce(IChargeContext context) { }
     public void EnterState(PaddleWithState paddle) {
         this.paddle = paddle;
+        paddle.SetPaddleColor(UnityEngine.Color.red);
     }
     public void UpdateState(IChargeContext context) {
         if (powerfulStateTimer > 0f)
