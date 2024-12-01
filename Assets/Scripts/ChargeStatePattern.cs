@@ -291,7 +291,8 @@ public class ChargedBounceState : IChargeStatePattern
 {
     PaddleWithState paddle;
     float originalSize;
-    float chargeWindow = 1.5f;
+    // how much time after the space is released the ball will bounce with a faster speed
+    float chargeWindow = 0.25f;
     public ChargedBounceState(float originalSize)
     {
         this.originalSize = originalSize;
@@ -315,12 +316,16 @@ public class ChargedBounceState : IChargeStatePattern
     public void UpdateState(IChargeContext context) {
         //Debug.Log("I am charged");
         // charged bounce
-        while (chargeWindow > 0f)
+        if (chargeWindow > 0f)
         {
             // èakej in spremeni barvo
             chargeWindow -= Time.deltaTime;
+            Debug.Log("chargeWindow: " + chargeWindow);
         }
-        PerformAChargedBounce(context);
+        else
+        {
+            PerformAChargedBounce(context);
+        }
     }
 }
 

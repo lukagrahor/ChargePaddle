@@ -61,6 +61,7 @@ public class Ball : MonoBehaviour
 
     public void BounceY(float boundary, float chargeMultiplier = 1f)
     {
+        Debug.Log("chargeMultiplier: " + chargeMultiplier);
         // Debug.Log("chargeMultiplier: " + chargeMultiplier);
         float durationAfterBounce = (position.y - boundary) / velocity.y;
         position.y = 2 * boundary - position.y;
