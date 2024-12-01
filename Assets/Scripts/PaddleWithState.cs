@@ -21,22 +21,9 @@ public class PaddleWithState : MonoBehaviour
     float
         size = 5f,
         targetingBias,
-        minChargeSize = 0,
-        currentSize = 0,
-        chargeTimer,
-        chargeOvertime,
-        waitBetweenCharges = 0f,
         chargeMultiplier = 1f;
 
-    int 
-        chargeLevel = 0,
-        score;
-
-    bool charge = false,
-        chargeInterrupt = false;
-        //endRoundCharge = false;
-
-
+    int score;
 
     [SerializeField]
     TextMeshPro scoreText;
@@ -133,7 +120,6 @@ public class PaddleWithState : MonoBehaviour
         scoreMaterial.SetColor(faceColorId, goalColor * (score / pointsToWin));
         if (newScore != -1)
         {
-            //endRoundCharge = true;
             SetSize(Mathf.Lerp(maxSize, minSize, score / (pointsToWin - 1f)));
         }
     }
@@ -151,8 +137,6 @@ public class PaddleWithState : MonoBehaviour
 
     public void ResetPaddleSizes()
     {
-
-        //endRoundCharge = true;
         SetSize(Mathf.Lerp(maxSize, minSize, 0));
     }
 
@@ -193,47 +177,6 @@ public class PaddleWithState : MonoBehaviour
             ChargeStateManager.StopCharging();
             Debug.Log("Dej jnjej -- space spušèen");
         }
-        /*
-        if (endRoundCharge)
-        {
-            chargeInterrupt = false;
-            currentSize = size;
-            charge = false;
-        } else
-        {
-            charge = chargeInterrupt == false ? Input.GetKey(chargeKey) : false;
-        }
-
-        if (chargeStart)
-        {
-            chargeTimer = 0f;
-            minChargeSize = size - chargeResize;
-            chargeLevel = 0;
-            chargeOvertime = 0f;
-            for (int i = 0; i < chargeSizeChanges.Length; i++)
-            {
-                chargeSizes[i] = i == 0 ? size - chargeSizeChanges[i] : chargeSizes[i - 1] - chargeSizeChanges[i];
-            }
-            waitBetweenCharges = 0.5f;
-            endRoundCharge = false;
-            chargeMultiplier = 1f;
-        }
-        else if (chargeFinish)
-        {
-            SetSize(currentSize);
-            chargeInterrupt = false;
-            chargeMultiplier = 1f;
-            //endRoundCharge = false;
-        }
-        else if (chargeInterrupt) // ko poteèe èas charganja, ampak igralec še drži charge gumb
-        {
-            SetSize(currentSize);
-        }
-        else if (charge)
-        {
-            ChargePaddle(currentSize);
-        }
-        */
     }
 
     public void StopChargingAfterRound()
