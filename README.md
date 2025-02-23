@@ -1,4 +1,7 @@
-# Paddle Square
+# Charge Paddle
+Koda za igro Charge Paddle
+Igra je na naslednji povezavi: https://github.com/lukagrahor/ChargePaddleGame
+
 Igre kjer igralec odbija žogico proti AI nasprotniku.
 Premikanje: puščici levo, desno
 Charge: enter
