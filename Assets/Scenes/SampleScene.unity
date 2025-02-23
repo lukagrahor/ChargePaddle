@@ -2146,7 +2146,7 @@ MonoBehaviour:
   scoreText: {fileID: 315383466}
   goalRenderer: {fileID: 276796277}
   goalColor: {r: 1, g: 1, b: 1, a: 1}
-  player: 1
+  player: 2
 --- !u!1001 &7566394379123260230
 PrefabInstance:
   m_ObjectHideFlags: 0
